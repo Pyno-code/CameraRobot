@@ -40,7 +40,7 @@ class BluetoothController {
             pServerBluetooth = new ServerBluetooth(deviceName, SERVICE_UUID);
             //cré les caractéristiques et ensuite start le serveur
             Characteristic ssid = *createCharacteristic(SSID_UUID);
-            Characteristic password = *createCharacteristic(PASSWORD)
+            Characteristic password = *createCharacteristic(PASSWORD);
             
         }
 
