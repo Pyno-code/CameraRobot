@@ -1,0 +1,327 @@
+- fix camera
+
+
+
+pygame 2.5.2 (SDL 2.28.3, Python 3.10.11)
+Hello from the pygame community. https://www.pygame.org/contribute.html
+INFO     13:33:32.993 Scanning for bluetooth devices...                                              ble_connect.py:55
+INFO     13:33:38.070    Discovered: Nour’s Monitor                                                  ble_connect.py:73
+INFO     13:33:38.072    Discovered: KS03~3C2AE1                                                     ble_connect.py:73
+INFO     13:33:38.073    Discovered: GoPro 8174                                                      ble_connect.py:73
+INFO     13:33:38.074    Discovered: JBL TUNE FLEX-LE                                                ble_connect.py:73
+INFO     13:33:38.075 Found 1 matching devices.                                                      ble_connect.py:77
+INFO     13:33:38.076 Establishing BLE connection to F3:C0:87:E7:C1:48: GoPro 8174...                ble_connect.py:82
+INFO     13:33:39.365 BLE Connected!                                                                 ble_connect.py:85
+INFO     13:33:39.366 Attempting to pair...                                                          ble_connect.py:88
+INFO     13:33:39.371 Pairing complete!                                                              ble_connect.py:94
+INFO     13:33:39.373 Enabling notifications...                                                      ble_connect.py:97
+INFO     13:33:39.374 Enabling notification on char 00002a19-0000-1000-8000-00805f9b34fb            ble_connect.py:101
+INFO     13:33:39.900 Enabling notification on char b5f90073-aa8d-11e3-9046-0002a5d5c51b            ble_connect.py:101
+INFO     13:33:40.004 Enabling notification on char b5f90075-aa8d-11e3-9046-0002a5d5c51b            ble_connect.py:101
+INFO     13:33:40.109 Enabling notification on char b5f90077-aa8d-11e3-9046-0002a5d5c51b            ble_connect.py:101
+INFO     13:33:40.214 Enabling notification on char b5f90079-aa8d-11e3-9046-0002a5d5c51b            ble_connect.py:101
+INFO     13:33:40.320 Enabling notification on char b5f90092-aa8d-11e3-9046-0002a5d5c51b            ble_connect.py:101
+INFO     13:33:40.424 Enabling notification on char b5f90081-aa8d-11e3-9046-0002a5d5c51b            ble_connect.py:101
+INFO     13:33:40.529 Enabling notification on char b5f90083-aa8d-11e3-9046-0002a5d5c51b            ble_connect.py:101
+INFO     13:33:40.634 Enabling notification on char b5f90084-aa8d-11e3-9046-0002a5d5c51b            ble_connect.py:101
+INFO     13:33:40.740 Done enabling notifications                                                   ble_connect.py:103
+INFO     13:33:40.741 Reading the WiFi AP SSID                                                       wifi_enable.py:54
+INFO     13:33:40.845 SSID is HERO11 Black Nathan                                                    wifi_enable.py:56
+INFO     13:33:40.846 Reading the WiFi AP password                                                   wifi_enable.py:59
+INFO     13:33:40.949 Password is gV5-fDX-YJv                                                        wifi_enable.py:61
+INFO     13:33:40.952 Enabling the WiFi AP                                                           wifi_enable.py:64
+INFO     13:33:41.055 Received response at handle 45: 02:17:00                                       wifi_enable.py:39
+INFO     13:33:41.056 Command sent successfully                                                      wifi_enable.py:43
+INFO     13:33:41.057 WiFi AP is enabled                                                             wifi_enable.py:68
+Le profil HERO11 Black Nathan est ajouté sur l'interface Wi-Fi.
+La demande de connexion a réussi.
+url http://172.21.174.51:8080/gopro/camera/control/wired_usb?p=0
+╭─────────────────────────────── Traceback (most recent call last) ────────────────────────────────╮
+│ C:\Users\pynop\AppData\Local\Programs\Python\Python310\lib\site-packages\urllib3\connection.py:1 │
+│ 98 in _new_conn                                                                                  │
+│                                                                                                  │
+│   195 │   │   :return: New socket connection.                                                    │
+│   196 │   │   """                                                                                │
+│   197 │   │   try:                                                                               │
+│ ❱ 198 │   │   │   sock = connection.create_connection(                                           │
+│   199 │   │   │   │   (self._dns_host, self.port),                                               │
+│   200 │   │   │   │   self.timeout,                                                              │
+│   201 │   │   │   │   source_address=self.source_address,                                        │
+│                                                                                                  │
+│ C:\Users\pynop\AppData\Local\Programs\Python\Python310\lib\site-packages\urllib3\util\connection │
+│ .py:85 in create_connection                                                                      │
+│                                                                                                  │
+│    82 │                                                                                          │
+│    83 │   if err is not None:                                                                    │
+│    84 │   │   try:                                                                               │
+│ ❱  85 │   │   │   raise err                                                                      │
+│    86 │   │   finally:                                                                           │
+│    87 │   │   │   # Break explicitly a reference cycle                                           │
+│    88 │   │   │   err = None                                                                     │
+│                                                                                                  │
+│ C:\Users\pynop\AppData\Local\Programs\Python\Python310\lib\site-packages\urllib3\util\connection │
+│ .py:73 in create_connection                                                                      │
+│                                                                                                  │
+│    70 │   │   │   │   sock.settimeout(timeout)                                                   │
+│    71 │   │   │   if source_address:                                                             │
+│    72 │   │   │   │   sock.bind(source_address)                                                  │
+│ ❱  73 │   │   │   sock.connect(sa)                                                               │
+│    74 │   │   │   # Break explicitly a reference cycle                                           │
+│    75 │   │   │   err = None                                                                     │
+│    76 │   │   │   return sock                                                                    │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────╯
+TimeoutError: [WinError 10060] Une tentative de connexion a échoué car le parti connecté n’a pas répondu
+convenablement au-delà d’une certaine durée ou une connexion établie a échoué car l’hôte de connexion n’a pas répondu 
+
+The above exception was the direct cause of the following exception:
+
+╭─────────────────────────────── Traceback (most recent call last) ────────────────────────────────╮
+│ C:\Users\pynop\AppData\Local\Programs\Python\Python310\lib\site-packages\urllib3\connectionpool. │
+│ py:793 in urlopen                                                                                │
+│                                                                                                  │
+│    790 │   │   │   response_conn = conn if not release_conn else None                            │
+│    791 │   │   │                                                                                 │
+│    792 │   │   │   # Make the request on the HTTPConnection object                               │
+│ ❱  793 │   │   │   response = self._make_request(                                                │
+│    794 │   │   │   │   conn,                                                                     │
+│    795 │   │   │   │   method,                                                                   │
+│    796 │   │   │   │   url,                                                                      │
+│                                                                                                  │
+│ C:\Users\pynop\AppData\Local\Programs\Python\Python310\lib\site-packages\urllib3\connectionpool. │
+│ py:496 in _make_request                                                                          │
+│                                                                                                  │
+│    493 │   │   # conn.request() calls http.client.*.request, not the method in                   │
+│    494 │   │   # urllib3.request. It also calls makefile (recv) on the socket.                   │
+│    495 │   │   try:                                                                              │
+│ ❱  496 │   │   │   conn.request(                                                                 │
+│    497 │   │   │   │   method,                                                                   │
+│    498 │   │   │   │   url,                                                                      │
+│    499 │   │   │   │   body=body,                                                                │
+│                                                                                                  │
+│ C:\Users\pynop\AppData\Local\Programs\Python\Python310\lib\site-packages\urllib3\connection.py:4 │
+│ 00 in request                                                                                    │
+│                                                                                                  │
+│   397 │   │   │   self.putheader("User-Agent", _get_default_user_agent())                        │
+│   398 │   │   for header, value in headers.items():                                              │
+│   399 │   │   │   self.putheader(header, value)                                                  │
+│ ❱ 400 │   │   self.endheaders()                                                                  │
+│   401 │   │                                                                                      │
+│   402 │   │   # If we're given a body we start sending that in chunks.                           │
+│   403 │   │   if chunks is not None:                                                             │
+│                                                                                                  │
+│ C:\Users\pynop\AppData\Local\Programs\Python\Python310\lib\http\client.py:1278 in endheaders     │
+│                                                                                                  │
+│   1275 │   │   │   self.__state = _CS_REQ_SENT                                                   │
+│   1276 │   │   else:                                                                             │
+│   1277 │   │   │   raise CannotSendHeader()                                                      │
+│ ❱ 1278 │   │   self._send_output(message_body, encode_chunked=encode_chunked)                    │
+│   1279 │                                                                                         │
+│   1280 │   def request(self, method, url, body=None, headers={}, *,                              │
+│   1281 │   │   │   │   encode_chunked=False):                                                    │
+│                                                                                                  │
+│ C:\Users\pynop\AppData\Local\Programs\Python\Python310\lib\http\client.py:1038 in _send_output   │
+│                                                                                                  │
+│   1035 │   │   self._buffer.extend((b"", b""))                                                   │
+│   1036 │   │   msg = b"\r\n".join(self._buffer)                                                  │
+│   1037 │   │   del self._buffer[:]                                                               │
+│ ❱ 1038 │   │   self.send(msg)                                                                    │
+│   1039 │   │                                                                                     │
+│   1040 │   │   if message_body is not None:                                                      │
+│   1041                                                                                           │
+│                                                                                                  │
+│ C:\Users\pynop\AppData\Local\Programs\Python\Python310\lib\http\client.py:976 in send            │
+│                                                                                                  │
+│    973 │   │                                                                                     │
+│    974 │   │   if self.sock is None:                                                             │
+│    975 │   │   │   if self.auto_open:                                                            │
+│ ❱  976 │   │   │   │   self.connect()                                                            │
+│    977 │   │   │   else:                                                                         │
+│    978 │   │   │   │   raise NotConnected()                                                      │
+│    979                                                                                           │
+│                                                                                                  │
+│ C:\Users\pynop\AppData\Local\Programs\Python\Python310\lib\site-packages\urllib3\connection.py:2 │
+│ 38 in connect                                                                                    │
+│                                                                                                  │
+│   235 │   │   self._tunnel_scheme = scheme                                                       │
+│   236 │                                                                                          │
+│   237 │   def connect(self) -> None:                                                             │
+│ ❱ 238 │   │   self.sock = self._new_conn()                                                       │
+│   239 │   │   if self._tunnel_host:                                                              │
+│   240 │   │   │   # If we're tunneling it means we're connected to our proxy.                    │
+│   241 │   │   │   self._has_connected_to_proxy = True                                            │
+│                                                                                                  │
+│ C:\Users\pynop\AppData\Local\Programs\Python\Python310\lib\site-packages\urllib3\connection.py:2 │
+│ 07 in _new_conn                                                                                  │
+│                                                                                                  │
+│   204 │   │   except socket.gaierror as e:                                                       │
+│   205 │   │   │   raise NameResolutionError(self.host, self, e) from e                           │
+│   206 │   │   except SocketTimeout as e:                                                         │
+│ ❱ 207 │   │   │   raise ConnectTimeoutError(                                                     │
+│   208 │   │   │   │   self,                                                                      │
+│   209 │   │   │   │   f"Connection to {self.host} timed out. (connect timeout={self.timeout})"   │
+│   210 │   │   │   ) from e                                                                       │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────╯
+ConnectTimeoutError: (<urllib3.connection.HTTPConnection object at 0x000002369A2873D0>, 'Connection to 172.21.174.51  
+timed out. (connect timeout=None)')
+
+The above exception was the direct cause of the following exception:
+
+╭─────────────────────────────── Traceback (most recent call last) ────────────────────────────────╮
+│ C:\Users\pynop\AppData\Local\Programs\Python\Python310\lib\site-packages\requests\adapters.py:48 │
+│ 6 in send                                                                                        │
+│                                                                                                  │
+│   483 │   │   │   timeout = TimeoutSauce(connect=timeout, read=timeout)                          │
+│   484 │   │                                                                                      │
+│   485 │   │   try:                                                                               │
+│ ❱ 486 │   │   │   resp = conn.urlopen(                                                           │
+│   487 │   │   │   │   method=request.method,                                                     │
+│   488 │   │   │   │   url=url,                                                                   │
+│   489 │   │   │   │   body=request.body,                                                         │
+│                                                                                                  │
+│ C:\Users\pynop\AppData\Local\Programs\Python\Python310\lib\site-packages\urllib3\connectionpool. │
+│ py:847 in urlopen                                                                                │
+│                                                                                                  │
+│    844 │   │   │   elif isinstance(new_e, (OSError, HTTPException)):                             │
+│    845 │   │   │   │   new_e = ProtocolError("Connection aborted.", new_e)                       │
+│    846 │   │   │                                                                                 │
+│ ❱  847 │   │   │   retries = retries.increment(                                                  │
+│    848 │   │   │   │   method, url, error=new_e, _pool=self, _stacktrace=sys.exc_info()[2]       │
+│    849 │   │   │   )                                                                             │
+│    850 │   │   │   retries.sleep()                                                               │
+│                                                                                                  │
+│ C:\Users\pynop\AppData\Local\Programs\Python\Python310\lib\site-packages\urllib3\util\retry.py:5 │
+│ 15 in increment                                                                                  │
+│                                                                                                  │
+│   512 │   │                                                                                      │
+│   513 │   │   if new_retry.is_exhausted():                                                       │
+│   514 │   │   │   reason = error or ResponseError(cause)                                         │
+│ ❱ 515 │   │   │   raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type   │
+│   516 │   │                                                                                      │
+│   517 │   │   log.debug("Incremented Retry for (url='%s'): %r", url, new_retry)                  │
+│   518                                                                                            │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────╯
+MaxRetryError: HTTPConnectionPool(host='172.21.174.51', port=8080): Max retries exceeded with url:
+/gopro/camera/control/wired_usb?p=0 (Caused by ConnectTimeoutError(<urllib3.connection.HTTPConnection object at       
+0x000002369A2873D0>, 'Connection to 172.21.174.51 timed out. (connect timeout=None)'))
+
+During handling of the above exception, another exception occurred:
+
+╭─────────────────────────────── Traceback (most recent call last) ────────────────────────────────╮
+│ c:\Users\pynop\Desktop\P2I 6 Concep\code\prog\test.py:50 in <module>                             │
+│                                                                                                  │
+│   47 │                                                                                           │
+│   48 │   webcam.stop()                                                                           │
+│   49                                                                                             │
+│ ❱ 50 asyncio.run(main())                                                                         │
+│   51                                                                                             │
+│                                                                                                  │
+│ C:\Users\pynop\AppData\Local\Programs\Python\Python310\lib\asyncio\runners.py:44 in run          │
+│                                                                                                  │
+│   41 │   │   events.set_event_loop(loop)                                                         │
+│   42 │   │   if debug is not None:                                                               │
+│   43 │   │   │   loop.set_debug(debug)                                                           │
+│ ❱ 44 │   │   return loop.run_until_complete(main)                                                │
+│   45 │   finally:                                                                                │
+│   46 │   │   try:                                                                                │
+│   47 │   │   │   _cancel_all_tasks(loop)                                                         │
+│                                                                                                  │
+│ C:\Users\pynop\AppData\Local\Programs\Python\Python310\lib\asyncio\base_events.py:649 in         │
+│ run_until_complete                                                                               │
+│                                                                                                  │
+│    646 │   │   if not future.done():                                                             │
+│    647 │   │   │   raise RuntimeError('Event loop stopped before Future completed.')             │
+│    648 │   │                                                                                     │
+│ ❱  649 │   │   return future.result()                                                            │
+│    650 │                                                                                         │
+│    651 │   def stop(self):                                                                       │
+│    652 │   │   """Stop running the event loop.                                                   │
+│                                                                                                  │
+│ c:\Users\pynop\Desktop\P2I 6 Concep\code\prog\test.py:19 in main                                 │
+│                                                                                                  │
+│   16 │                                                                                           │
+│   17 │                                                                                           │
+│   18 │   webcam = Webcam("174")                                                                  │
+│ ❱ 19 │   webcam.enable()                                                                         │
+│   20 │                                                                                           │
+│   21 │   print("camera enable")                                                                  │
+│   22 │   port = 9000                                                                             │
+│                                                                                                  │
+│ c:\Users\pynop\Desktop\P2I 6 Concep\code\prog\multi_webcam\webcam.py:72 in enable                │
+│                                                                                                  │
+│    69 │                                                                                          │
+│    70 │   def enable(self) -> None:                                                              │
+│    71 │   │   """Prepare the GoPro to be ready to function as a webcam"""                        │
+│ ❱  72 │   │   self._send_http_no_validate(self.Endpoint.WIRELESS_USB_DISABLE)                    │
+│    73 │   │   self.state = self.State.READY                                                      │
+│    74 │                                                                                          │
+│    75 │   def preview(self) -> None:                                                             │
+│                                                                                                  │
+│ c:\Users\pynop\Desktop\P2I 6 Concep\code\prog\multi_webcam\webcam.py:60 in                       │
+│ _send_http_no_validate                                                                           │
+│                                                                                                  │
+│    57 │   def _send_http_no_validate(self, endpoint: Webcam.Endpoint, **kwargs) -> requests.Re   │
+│    58 │   │   logging.debug(f"Sending {endpoint.value}: {kwargs}")                               │
+│    59 │   │   print("url", self._base_url + endpoint.value)                                      │
+│ ❱  60 │   │   response = requests.get(self._base_url + endpoint.value, params=kwargs)            │
+│    61 │   │   logging.debug(f"HTTP return code {response.status_code}")                          │
+│    62 │   │   logging.debug(json.dumps(response.json(), indent=4))                               │
+│    63 │   │   return response                                                                    │
+│                                                                                                  │
+│ C:\Users\pynop\AppData\Local\Programs\Python\Python310\lib\site-packages\requests\api.py:73 in   │
+│ get                                                                                              │
+│                                                                                                  │
+│    70 │   :rtype: requests.Response                                                              │
+│    71 │   """                                                                                    │
+│    72 │                                                                                          │
+│ ❱  73 │   return request("get", url, params=params, **kwargs)                                    │
+│    74                                                                                            │
+│    75                                                                                            │
+│    76 def options(url, **kwargs):                                                                │
+│                                                                                                  │
+│ C:\Users\pynop\AppData\Local\Programs\Python\Python310\lib\site-packages\requests\api.py:59 in   │
+│ request                                                                                          │
+│                                                                                                  │
+│    56 │   # avoid leaving sockets open which can trigger a ResourceWarning in some               │
+│    57 │   # cases, and look like a memory leak in others.                                        │
+│    58 │   with sessions.Session() as session:                                                    │
+│ ❱  59 │   │   return session.request(method=method, url=url, **kwargs)                           │
+│    60                                                                                            │
+│    61                                                                                            │
+│    62 def get(url, params=None, **kwargs):                                                       │
+│                                                                                                  │
+│ C:\Users\pynop\AppData\Local\Programs\Python\Python310\lib\site-packages\requests\sessions.py:58 │
+│ 9 in request                                                                                     │
+│                                                                                                  │
+│   586 │   │   │   "allow_redirects": allow_redirects,                                            │
+│   587 │   │   }                                                                                  │
+│   588 │   │   send_kwargs.update(settings)                                                       │
+│ ❱ 589 │   │   resp = self.send(prep, **send_kwargs)                                              │
+│   590 │   │                                                                                      │
+│   591 │   │   return resp                                                                        │
+│   592                                                                                            │
+│                                                                                                  │
+│ C:\Users\pynop\AppData\Local\Programs\Python\Python310\lib\site-packages\requests\sessions.py:70 │
+│ 3 in send                                                                                        │
+│                                                                                                  │
+│   700 │   │   start = preferred_clock()                                                          │
+│   701 │   │                                                                                      │
+│   702 │   │   # Send the request                                                                 │
+│ ❱ 703 │   │   r = adapter.send(request, **kwargs)                                                │
+│   704 │   │                                                                                      │
+│   705 │   │   # Total elapsed time of the request (approximately)                                │
+│   706 │   │   elapsed = preferred_clock() - start                                                │
+│                                                                                                  │
+│ C:\Users\pynop\AppData\Local\Programs\Python\Python310\lib\site-packages\requests\adapters.py:50 │
+│ 7 in send                                                                                        │
+│                                                                                                  │
+│   504 │   │   │   if isinstance(e.reason, ConnectTimeoutError):                                  │
+│   505 │   │   │   │   # TODO: Remove this in 3.0.0: see #2811                                    │
+│   506 │   │   │   │   if not isinstance(e.reason, NewConnectionError):                           │
+│ ❱ 507 │   │   │   │   │   raise ConnectTimeout(e, request=request)                               │
+│   508 │   │   │                                                                                  │
+│   509 │   │   │   if isinstance(e.reason, ResponseError):                                        │
+│   510 │   │   │   │   raise RetryError(e, request=request)                                       │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────╯
+ConnectTimeout: HTTPConnectionPool(host='172.21.174.51', port=8080): Max retries exceeded with url:
+/gopro/camera/control/wired_usb?p=0 (Caused by ConnectTimeoutError(<urllib3.connection.HTTPConnection object at       
+0x000002369A2873D0>, 'Connection to 172.21.174.51 timed out. (connect timeout=None)'))

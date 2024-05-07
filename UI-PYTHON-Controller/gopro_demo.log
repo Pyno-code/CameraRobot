@@ -1,0 +1,19 @@
+   MainThread:17:24:32.236 bleak_wrapper.py                          119 INFO     | Scanning for GoPro [A-Z0-9]{4} bluetooth devices...
+   MainThread:17:24:32.410 scanner.py                                109 DEBUG    | Received 65:FB:8B:D1:C8:3D: .
+   MainThread:17:24:32.412 scanner.py                                109 DEBUG    | Received 58:0B:2C:61:EE:59: .
+   MainThread:17:24:32.413 scanner.py                                109 DEBUG    | Received 3D:40:1C:9A:E6:5F: .
+   MainThread:17:24:32.416 scanner.py                                109 DEBUG    | Received 6C:A4:B5:8F:4B:F2: .
+   MainThread:17:24:32.532 scanner.py                                109 DEBUG    | Received 6C:A4:B5:8F:4B:F2: .
+   MainThread:17:24:32.535 scanner.py                                109 DEBUG    | Received 31:8A:5B:7B:C3:C3: .
+   MainThread:17:24:32.540 scanner.py                                109 DEBUG    | Received 05:8C:CE:90:B8:99: .
+   MainThread:17:24:32.637 scanner.py                                109 DEBUG    | Received 01:13:D3:6C:97:89: .
+   MainThread:17:24:32.647 scanner.py                                109 DEBUG    | Received 54:45:10:2C:9B:D4: .
+   MainThread:17:24:32.650 scanner.py                                109 DEBUG    | Received F9:25:B2:82:47:28: .
+   MainThread:17:24:32.651 scanner.py                                109 DEBUG    | Received F9:25:B2:82:47:28: GoPro 8174.
+   MainThread:17:24:32.652 bleak_wrapper.py                          132 INFO     | 	Discovered: F9:25:B2:82:47:28: GoPro 8174
+   MainThread:17:24:32.656 scanner.py                                215 DEBUG    | 9 devices found. Watcher status: <BluetoothLEAdvertisementWatcherStatus.STOPPED: 3>.
+   MainThread:17:24:32.656 scanner.py                                109 DEBUG    | Received 2E:8B:30:1D:94:5D: .
+   MainThread:17:24:32.656 bleak_wrapper.py                          145 INFO     | Found 1 matching devices.
+   MainThread:17:24:32.657 client.py                                 106 INFO     | Establishing the BLE connection
+   MainThread:17:24:32.659 bleak_wrapper.py                          212 INFO     | Establishing BLE connection to F9:25:B2:82:47:28: GoPro 8174...
+   MainThread:17:24:32.665 client.py                                 293 DEBUG    | Connecting to BLE device @ F9:25:B2:82:47:28
