@@ -26,7 +26,7 @@ void connect_to_wifi() {
 
 void setup() {
 
-  Serial.begin(460800);
+  Serial.begin(115200);
   Serial.println("Hey working !"); 
 
   // initialiser les objets ici : 
