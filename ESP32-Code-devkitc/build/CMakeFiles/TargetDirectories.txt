@@ -1,0 +1,7 @@
+C:/Users/pynop/Documents/prog/CameraRobot/ESP32-Code-devkitc/build/CMakeFiles/unity.dir
+C:/Users/pynop/Documents/prog/CameraRobot/ESP32-Code-devkitc/build/CMakeFiles/edit_cache.dir
+C:/Users/pynop/Documents/prog/CameraRobot/ESP32-Code-devkitc/build/CMakeFiles/rebuild_cache.dir
+C:/Users/pynop/Documents/prog/CameraRobot/ESP32-Code-devkitc/build/CMakeFiles/list_install_components.dir
+C:/Users/pynop/Documents/prog/CameraRobot/ESP32-Code-devkitc/build/CMakeFiles/install.dir
+C:/Users/pynop/Documents/prog/CameraRobot/ESP32-Code-devkitc/build/CMakeFiles/install/local.dir
+C:/Users/pynop/Documents/prog/CameraRobot/ESP32-Code-devkitc/build/CMakeFiles/install/strip.dir

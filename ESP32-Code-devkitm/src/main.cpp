@@ -20,14 +20,14 @@ int lastButtonState = LOW;  // the previous reading from the input pin
 unsigned long lastDebounceTime = 0;  // the last time the output pin was toggled
 unsigned long debounceDelay = 50;    // the debounce time; increase if the output flickers
 
-ControlMotors motor_controler;
+// ControlMotors motor_controler;
 
 
 bool running = false;
 // int i = 0;
 
 void setup() {
-  motor_controler = ControlMotors();
+  // motor_controler = ControlMotors();
   Serial.begin(115200);
 
   Serial.println("Starting...");
@@ -64,7 +64,8 @@ void loop() {
   }
 
   if (running) {
-    motor_controler.loop();
+    Serial.println("Running");
+    // motor_controler.loop();
   }
 
   // save the reading. Next time through the loop, it'll be the lastButtonState:
