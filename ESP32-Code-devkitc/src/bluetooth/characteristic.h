@@ -8,37 +8,35 @@
 
 class CharacteristicCallBack : public BLECharacteristicCallbacks {
 private:
-    std::queue<char*> list_queue;
+    LinkedList<String> messageQueue = LinkedList<String>();
 
 public:
-    char* popValue() {
-        if (!list_queue.empty()) {
-            char* value_ = list_queue.front();
-            list_queue.pop();
-            return value_;
+    String popMessage() {
+        if (hasValue()) {
+            String message = messageQueue.pop();
+            return message;
         }
-        Serial.println("Erreur, Pas de valeur à extraire");
-        return nullptr;
+        else {
+            return "";
+        }
+    }
+
+    void clearQueue() {
+        messageQueue.clear();
     }
 
     bool hasValue() {
-        return !list_queue.empty();
+        return (messageQueue.size() != 0);
     }
 
     void onWrite(BLECharacteristic* pChar) override {
         std::string str_value = pChar->getValue();
-        char* value_ = new char[str_value.length() + 1];
-        strcpy(value_, str_value.c_str());
-
-        list_queue.push(value_);
-        
+        String message = String(str_value.c_str());
+        messageQueue.add(message);
     }
 
     ~CharacteristicCallBack() {
-        while (!list_queue.empty()) {
-            delete[] list_queue.front();
-            list_queue.pop();
-        }
+        delete &messageQueue;
     }
 
 
@@ -84,7 +82,23 @@ public:
         
         callback = new CharacteristicCallBack();
         pCharacteristic->setCallbacks(callback);
+        pCharacteristic->setValue("");
+    }
 
-        pCharacteristic->setValue("nothing");
+    bool hasValue() {
+        return callback->hasValue();
+    }
+
+    String getMessage() {
+        return callback->popMessage();
+    }
+
+    void setValue(const String value) {
+        callback->clearQueue();
+        pCharacteristic->setValue(std::string(value.c_str()));
+    }
+
+    String getCurrentValue() {
+        return String(pCharacteristic->getValue().c_str());
     }
 };
