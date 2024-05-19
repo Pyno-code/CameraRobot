@@ -21,7 +21,7 @@ class TcpClient : public WiFiClient {
 
         String popMessage() {
             if (hasMessage()) {
-                String message = messageQueue.pop();
+                String message = messageQueue.get(0);
                 messageQueue.remove(0);
                 return message;
             }
