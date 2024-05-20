@@ -2,22 +2,26 @@
 #include <WiFiClient.h>
 #include <WiFiServer.h>
 #include <Vector.h>
+#include <LinkedList.h>
+
+
 
 class TcpClient : public WiFiClient {
-    public:
-        TcpClient(const WiFiClient& client) : WiFiClient(client) {}
 
     private:
-        Vector<String> messageQueue;
+        LinkedList<String> messageQueue = LinkedList<String>();
 
     public:
+        TcpClient() : WiFiClient() {}
+        TcpClient(const WiFiClient& client) : WiFiClient(client) {}
+
         void addMessage(const String& message) {
-            messageQueue.push_back(message);
+            messageQueue.add(message);
         }
 
         String popMessage() {
-            if (!messageQueue.empty()) {
-                String message = messageQueue.front();
+            if (hasMessage()) {
+                String message = messageQueue.get(0);
                 messageQueue.remove(0);
                 return message;
             }
@@ -28,20 +32,24 @@ class TcpClient : public WiFiClient {
             messageQueue.clear();
         }
 
-        bool hasMessages() {
-            return !messageQueue.empty();
+        bool hasMessage() {
+            return (messageQueue.size() != 0);
         }
+
 };
 
 class TcpServer {
     private:
-        WiFiServer server;
-        Vector<TcpClient> clients;
+        TcpClient client;
         bool isRunning = false;
-        int port;
+            int port;
 
-    public:
-        TcpServer(int port_) : port(port_), server(port_) {}
+        public:
+            WiFiServer server;
+            TcpServer(int port_) : port(port_) {
+                server = WiFiServer(port);
+            }
+
 
         void begin() {
             server.begin();
@@ -56,58 +64,46 @@ class TcpServer {
         }
 
         void listen() {
-            TcpClient newClient(server.available());
-            if (newClient) {
-                clients.push_back(newClient);
-                //TcpClient client = clients.back();
-                Serial.print("Client connected from IP: ");
-                Serial.println(newClient.remoteIP());
-                Serial.print("Client connected from port: ");
-                Serial.println(newClient.remotePort());
-                Serial.println("New client connected to the TCP server");
-                Serial.print("Number of clients connected: ");
-                Serial.println(clients.size());
-            }
-        }
-
-        void kickClient(int clientIndex) {
-            if (clientIndex >= 0 && clientIndex < clients.size()) {
-                clients[clientIndex].stop();
-                clients.remove(clientIndex);
-                Serial.println("Client kicked");
-
-            }
-        }
-
-        void readMessages() {
-            for (int i = 0; i < clients.size(); i++) {
-                // check si il y a des messages à lire
-                if (clients[i].available()) {
-                    Serial.print("Reading message from client ");
-                    String message = clients[i].readString();
-                    // lis jusqu'à la fin de la ligne
-                    Serial.print("Received message from client ");
-                    Serial.print(i);
-                    Serial.print(": ");
-                    Serial.println(message);
+            if (!client.connected()) {
+                delay(1000);
+                Serial.println("Listening for clients...");
+                TcpClient newClient(server.available());
+                if (newClient) {
+                    client = newClient;
                 }
             }
         }
 
-        void sendMessage(int clientIndex, const String& message) {
-            if (clientIndex >= 0 && clientIndex < clients.size()) {
-                clients[clientIndex].println(message);
-                Serial.print("Sent message to client ");
-                Serial.print(clientIndex);
-                Serial.print(": ");
-                Serial.println(message);
+        void kickClient() {
+            client.stop();
+        }
+
+        void readMessage() {
+            if (client.available()) {
+                String message = client.readStringUntil('$');
+                client.addMessage(message);
             }
         }
 
+        String getMessage() {
+            return client.popMessage();
+        }
+
+        bool hasMessage() {
+            return client.hasMessage();
+        }
+
+        void sendMessage(const String& message) {
+            client.print(message);
+            Serial.print("Sent message to client ");
+            Serial.print(": ");
+            Serial.println(message);
+        }
+
         void stopServer() {
-            for (int i = 0; i < clients.size(); i++) {
-                kickClient(i);
-            }
+            
+            kickClient();
+
             server.stop();
             isRunning = false;
             Serial.println("Server stopped");
@@ -118,10 +114,10 @@ class TcpServer {
         }
 
         bool hasClients() {
-            return clients.size() > 0;
+            return client.connected();
         }
 
-        Vector<TcpClient>& getClients() {
-            return clients;
+        TcpClient getClient() {
+            return client;
         }
 };
