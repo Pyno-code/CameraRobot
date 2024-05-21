@@ -2,7 +2,7 @@
 #include <wifi/wifi_controller.h>
 #include <wifi/server_controller.h>
 #include <HardwareSerial.h>
-#include <variable.h>
+#include <variable.cpp>
 
 
 // Définir le nom du périphérique BLE
@@ -32,54 +32,10 @@ void setup() {
 void loop() {
   bleController->loop();
 
-  if (variable::orderWorking && variable::bluetoothConnectedStatus) {
-    // si j'ai l'ordre de marcher
-    variable::workingStatus = true;
-
-    if (variable::orderWifiConnection) {
-      // si j'ai l'ordre de me connecter au wifi
-      
-      if (!variable::wifiInitialized) {
-        // si le wifi n'est pas initialisé
-        wifiController = new WiFiController();
-        variable::wifiInitialized = true;
-      }
-
-      if (!wifiController->isConnected()) {
-        // si le wifi n'est pas connecté
-        bool connected = wifiController->connect(variable::ssid.c_str(), variable::password.c_str());
-        variable::wifiConnectedStatus = connected;
-      
-        variable::serverTcpInitialized = false;
-        variable::serverTcpConnectedStatus = false;
-
-        if (connected) {
-          variable::ip = wifiController->getLocalIP().toString();
-        }
-
-      } else {
-        // si le wifi est connecté
-
-        if (!variable::serverTcpInitialized) {
-          // si le serveur tcp n'est pas initialisé
-
-          serverController = new ServerController(variable::port);
-
-          variable::serverTcpInitialized = true;
-          variable::serverTcpConnectedStatus = true;
-        }
-
-        serverController->loop();
-        
-      } 
-    } else {
-      // si j'ai l'ordre de me déconnecter du wifi
-      if (variable::wifiInitialized) {
-        wifiController->disconnect();
-        variable::wifiConnectedStatus = false;
-        variable::wifiInitialized = false;
-      }
-    }
+  if (variable::bluetoothConnectedStatus) {
+    
+    Serial.println("Bluetooth connected");
+    delay(10000);
 
   } else {
     // si j'ai l'ordre de m'arrêter ou si je ne suis pas connecté en bluetooth

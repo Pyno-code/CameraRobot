@@ -5,7 +5,7 @@
 #include <HardwareSerial.h>
 #include "bluetooth/characteristic.h"
 #include "bluetooth/server.h"
-#include "variable.h"
+#include "variable.cpp"
 
 
 #define SERVICE_UUID "4fafc201-1fb5-459e-8fcc-c5c9c331914b"
