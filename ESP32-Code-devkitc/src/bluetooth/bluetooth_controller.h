@@ -151,8 +151,6 @@ class BluetoothController {
                     (characteristics)[PORT_UUID]->setValue(String(variable::port));
                     Serial.println("Port : " + String(variable::port));
                 }
-
-
             }
         }
 

@@ -40,8 +40,6 @@ void setup() {
 
   bleController = new BluetoothController(DEVICE_NAME);
 
-
-
   // initialiser les objets utilisant le wifi dans la loop ....
   // initialiser l'objet wifiController lors de l'envoie des données de connexion ....
 

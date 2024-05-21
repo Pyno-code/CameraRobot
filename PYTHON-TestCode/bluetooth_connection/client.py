@@ -64,10 +64,12 @@ class BLEClient:
 
 # Example usage
 async def main():
-    device_address = "00:11:22:33:AA:BB"  # Replace with your device address
+    device_address = "48:27:E2:63:9E:A5"  # Replace with your device address
 
     client = BLEClient()
     await client.scan(debug=True)
-    # await client.connect_by_address("73:1F:8E:9E:D4:45")
+    print("Connecting to device...")
+    await client.connect_by_address(device_address)
 
-asyncio.run(main())
+if __name__ == "__main__":
+    asyncio.run(main())
