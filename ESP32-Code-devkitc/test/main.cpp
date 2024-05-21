@@ -1,83 +1,67 @@
- 
-#include "WiFi.h"
- 
-void setup()
-{
-    Serial.begin(115200);
- 
-}
- 
-void loop()
-{
-    Serial.println("Scan start");
+#include <bluetooth/bluetooth_controller.h>
+#include <wifi/wifi_controller.h>
+#include <wifi/server_controller.h>
+#include <HardwareSerial.h>
+#include <variable.cpp>
 
-    // Set WiFi to station mode and disconnect from an AP if it was previously connected.
-    WiFi.mode(WIFI_STA);
-    WiFi.disconnect();
-    delay(100);
+
+// Définir le nom du périphérique BLE
+#define DEVICE_NAME "ESP32"
+
+// Déclarer les instances des contrôleurs
+BluetoothController* bleController;
+WiFiController* wifiController;
+ServerController* serverController;
+
+bool variable::workingStatus;
+bool variable::wifiConnectedStatus;
+bool variable::bluetoothConnectedStatus;
+bool variable::serverTcpConnectedStatus;
+
+bool variable::orderWorking;
+bool variable::orderWifiConnection;
+
+bool variable::wifiInitialized;
+bool variable::serverTcpInitialized;
+
+String variable::ssid;
+String variable::password;
+
+String variable::ip;
+int variable::port = 5000;
+
  
-    Serial.println("Setup done");
- 
-    // WiFi.scanNetworks will return the number of networks found.
-    int n = WiFi.scanNetworks();
-    Serial.println("Scan done");
-    if (n == 0) {
-        Serial.println("no networks found");
-    } else {
-        Serial.print(n);
-        Serial.println(" networks found");
-        Serial.println("Nr | SSID                             | RSSI | CH | Encryption");
-        for (int i = 0; i < n; ++i) {
-            // Print SSID and RSSI for each network found
-            Serial.printf("%2d",i + 1);
-            Serial.print(" | ");
-            Serial.printf("%-32.32s", WiFi.SSID(i).c_str());
-            Serial.print(" | ");
-            Serial.printf("%4d", WiFi.RSSI(i));
-            Serial.print(" | ");
-            Serial.printf("%2d", WiFi.channel(i));
-            Serial.print(" | ");
-            switch (WiFi.encryptionType(i))
-            {
-            case WIFI_AUTH_OPEN:
-                Serial.print("open");
-                break;
-            case WIFI_AUTH_WEP:
-                Serial.print("WEP");
-                break;
-            case WIFI_AUTH_WPA_PSK:
-                Serial.print("WPA");
-                break;
-            case WIFI_AUTH_WPA2_PSK:
-                Serial.print("WPA2");
-                break;
-            case WIFI_AUTH_WPA_WPA2_PSK:
-                Serial.print("WPA+WPA2");
-                break;
-            case WIFI_AUTH_WPA2_ENTERPRISE:
-                Serial.print("WPA2-EAP");
-                break;
-            case WIFI_AUTH_WPA3_PSK:
-                Serial.print("WPA3");
-                break;
-            case WIFI_AUTH_WPA2_WPA3_PSK:
-                Serial.print("WPA2+WPA3");
-                break;
-            case WIFI_AUTH_WAPI_PSK:
-                Serial.print("WAPI");
-                break;
-            default:
-                Serial.print("unknown");
-            }
-            Serial.println();
-            delay(10);
-        }
-    }
-    Serial.println("");
- 
-    // Delete the scan result to free memory for code below.
-    WiFi.scanDelete();
- 
-    // Wait a bit before scanning again.
-    delay(5000);
+
+void setup() {
+  Serial.begin(115200);
+  
+  delay(5000); // attendre que le moniteur série se connecte
+  Serial.println("Hey working !");
+
+  bleController = new BluetoothController(DEVICE_NAME);
+
+
+
+  // initialiser les objets utilisant le wifi dans la loop ....
+  // initialiser l'objet wifiController lors de l'envoie des données de connexion ....
+
+}
+
+void loop() {
+  bleController->loop();
+
+  if (variable::bluetoothConnectedStatus) {
+
+    delay(2000); // attendre 1 seconde
+    Serial.println("working !");
+
+  } else {
+    // si j'ai l'ordre de m'arrêter ou si je ne suis pas connecté en bluetooth
+    variable::wifiInitialized = false;
+    variable::serverTcpInitialized = false;
+    
+    variable::workingStatus = false;
+    variable::wifiConnectedStatus = false;
+    variable::serverTcpConnectedStatus = false;
+  }
 }

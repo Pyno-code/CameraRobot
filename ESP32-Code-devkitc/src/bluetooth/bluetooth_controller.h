@@ -15,7 +15,7 @@ class BluetoothController {
     private:
         ServerBluetooth *pServerBluetooth;
         bool isRunning = false;
-        std::map<std::string, Characteristic*>* characteristics;
+        std::map<std::string, Characteristic*> characteristics;
 
         //************************************************************
         #define SSID_UUID "02456daf-2ff7-431b-812b-772f0eb7b2b2"
@@ -43,8 +43,9 @@ class BluetoothController {
 
            
             // fin des définitions des UUID
-
+            Serial.println("Initializing bluetooth server ...");
             pServerBluetooth = new ServerBluetooth(deviceName, SERVICE_UUID);
+            Serial.println("Bluetooth Server initialized");
             //cré les caractéristiques et ensuite start le serveur
             
             //toutes les charactéristiques doivent être créées ici
@@ -64,8 +65,8 @@ class BluetoothController {
             Characteristic orderConnectionWifiCharacteristic = *createCharacteristic(ORDER_WIFI_CONNECTION_UUID);
             Characteristic orderWorkingCharacteristic = *createCharacteristic(ORDER_WORKING_UUID);
             //************************************************************
-
-
+            pServerBluetooth->startServer();
+            Serial.println("Bluetooth Controller initialized");
             
         }
 
@@ -73,79 +74,91 @@ class BluetoothController {
         // Cette fonction est un exemple de l'utilisation du contrôleur, elle ne doit pas être appelée.
         void loop() {
             if (!pServerBluetooth->isDeviceConnected()) {
+                Serial.println("Device not connected. Searching for device ...");
                 variable::bluetoothConnectedStatus = false;
                 pServerBluetooth->startAdvertising();
                 delay(2000);
                 if (pServerBluetooth->isDeviceConnected()) {
+                    Serial.println("Device found ...");
                     variable::bluetoothConnectedStatus = true;
                 }
             } else {
                 
+                
                 // lire les valeurs et les ordres ici
 
                 // ordre de marcher
-                if ((*characteristics)[ORDER_WORKING_UUID]->hasValue()) {
-                    String orderWorking = (*characteristics)[ORDER_WORKING_UUID]->getMessage();
+                if ((characteristics)[ORDER_WORKING_UUID]->hasValue()) {
+                    String orderWorking = (characteristics)[ORDER_WORKING_UUID]->getMessage();
                     variable::orderWorking = stringToBool(orderWorking);
                     Serial.println("Order working : " + orderWorking);
                 }
 
+
                 // ordre de connexion wifi
-                if ((*characteristics)[ORDER_WIFI_CONNECTION_UUID]->hasValue()) {
-                    String orderWifiConnection = (*characteristics)[ORDER_WIFI_CONNECTION_UUID]->getMessage();
+                if ((characteristics)[ORDER_WIFI_CONNECTION_UUID]->hasValue()) {
+                    String orderWifiConnection = (characteristics)[ORDER_WIFI_CONNECTION_UUID]->getMessage();
                     variable::orderWifiConnection = stringToBool(orderWifiConnection);
                     Serial.println("Order wifi connection : " + orderWifiConnection);
                 }
+                
 
                 // valeur de ssid
-                if ((*characteristics)[SSID_UUID]->hasValue()) {
-                    variable::ssid = (*characteristics)[SSID_UUID]->getMessage();
+                if ((characteristics)[SSID_UUID]->hasValue()) {
+                    variable::ssid = (characteristics)[SSID_UUID]->getMessage();
                     Serial.println("SSID : " + variable::ssid);
                 }
                 
+
                 // valeur de password
-                if ((*characteristics)[PASSWORD_UUID]->hasValue()) {
-                    variable::password = (*characteristics)[PASSWORD_UUID]->getMessage();
+                if ((characteristics)[PASSWORD_UUID]->hasValue()) {
+                    variable::password = (characteristics)[PASSWORD_UUID]->getMessage();
                     Serial.println("Password : " + variable::password);
                 }
 
                 // écrire les status si la valeur a changé
 
                 // status de connexion bluetooth
-                if (variable::wifiConnectedStatus != stringToBool((*characteristics)[WIFI_STATUS_UUID]->getCurrentValue())) {
-                    (*characteristics)[WIFI_STATUS_UUID]->setValue(boolToString(variable::wifiConnectedStatus));
+                if (variable::wifiConnectedStatus != stringToBool((characteristics)[WIFI_STATUS_UUID]->getCurrentValue())) {
+                    (characteristics)[WIFI_STATUS_UUID]->setValue(boolToString(variable::wifiConnectedStatus));
                     Serial.println("Wifi status : " + boolToString(variable::wifiConnectedStatus));
                 }
+
                 
                 // status de connexion wifi
-                if (variable::workingStatus != stringToBool((*characteristics)[WORKING_STATUS_UUID]->getCurrentValue())) {
-                    (*characteristics)[WORKING_STATUS_UUID]->setValue(boolToString(variable::workingStatus));
+                if (variable::workingStatus != stringToBool((characteristics)[WORKING_STATUS_UUID]->getCurrentValue())) {
+                    (characteristics)[WORKING_STATUS_UUID]->setValue(boolToString(variable::workingStatus));
                     Serial.println("Working status : " + boolToString(variable::workingStatus));
                 }
 
+
                 // status de connexion serveur tcp
-                if (variable::serverTcpConnectedStatus != stringToBool((*characteristics)[SERVER_TCP_STATUS_UUID]->getCurrentValue())) {
-                    (*characteristics)[SERVER_TCP_STATUS_UUID]->setValue(boolToString(variable::serverTcpConnectedStatus));
+                if (variable::serverTcpConnectedStatus != stringToBool((characteristics)[SERVER_TCP_STATUS_UUID]->getCurrentValue())) {
+                    (characteristics)[SERVER_TCP_STATUS_UUID]->setValue(boolToString(variable::serverTcpConnectedStatus));
                     Serial.println("Server tcp status : " + boolToString(variable::serverTcpConnectedStatus));
                 }
 
+
                 // écriture de l'ip
-                if (variable::ip != (*characteristics)[IP_UUID]->getCurrentValue()) {
-                    (*characteristics)[IP_UUID]->setValue(variable::ip);
+                if (variable::ip != (characteristics)[IP_UUID]->getCurrentValue()) {
+                    (characteristics)[IP_UUID]->setValue(variable::ip);
                     Serial.println("IP : " + variable::ip);
                 }
 
+
                 // écriture du port
-                if (variable::port != std::stoi((*characteristics)[PORT_UUID]->getCurrentValue().c_str())) {
-                    (*characteristics)[PORT_UUID]->setValue(String(variable::port));
+                if (variable::port != (characteristics)[PORT_UUID]->getCurrentValue().toInt()) {
+                    (characteristics)[PORT_UUID]->setValue(String(variable::port));
                     Serial.println("Port : " + String(variable::port));
                 }
+
+
             }
         }
 
         Characteristic* createCharacteristic(const char* uuid) {
             Characteristic *characteristic = new Characteristic(pServerBluetooth->getServer(), SERVICE_UUID, uuid);
-            (*characteristics)[uuid] = characteristic;
+            (characteristics)[uuid] = characteristic;
             return characteristic;
         }
 
@@ -165,8 +178,7 @@ class BluetoothController {
 
         void stop() {
             pServerBluetooth->stopServer();
-            characteristics->clear();
-            delete characteristics;
+            characteristics.clear();
             delete pServerBluetooth;
             isRunning = false;
         }
@@ -176,7 +188,7 @@ class BluetoothController {
         }
 
         Characteristic* getCharacteristic(const char* uuid) {
-            return (*characteristics)[uuid];
+            return (characteristics)[uuid];
         }
 
         bool stringToBool(String str) {

@@ -14,11 +14,11 @@ class ServerCallback: public BLEServerCallbacks {
 
         void onConnect(BLEServer* pServer) {
             deviceConnected = true;
-            Serial.println("device connected");
+            Serial.println("Device connected");
         };
 
         void onDisconnect(BLEServer* pServer) {
-            Serial.println("device disconnected");
+            Serial.println("Device disconnected");
             deviceConnected = false;
         };
 };
@@ -27,10 +27,10 @@ class ServerCallback: public BLEServerCallbacks {
 class ServerBluetooth {
 
     private:
-        BLEServer *pServer = NULL;
-        BLEService *pService = NULL;
-        ServerCallback *pServerCallback = NULL;
-        BLEAdvertising *pAdvertising = NULL;
+        BLEServer *pServer;
+        BLEService *pService;
+        ServerCallback *pServerCallback;
+        BLEAdvertising *pAdvertising;
         bool isAdvertising = false;
 
     public:
@@ -43,7 +43,7 @@ class ServerBluetooth {
             pServerCallback = new ServerCallback();
             pServer->setCallbacks(pServerCallback);
 
-            pService = pServer->createService(SERVICE_UUID);
+            pService = pServer->createService(SERVICE_UUID, 32);
 
             /*BLECharacteristic* pCharacteristic_2 = pService->createCharacteristic(
                       "1c95d5e3-d8f7-413a-bf3d-7a2e5d7be87e",
@@ -64,7 +64,6 @@ class ServerBluetooth {
                 isAdvertising = false;
             }
             if (!isAdvertising) {
-                Serial.println("starting ble signal");
                 pServer->startAdvertising();
                 isAdvertising = true;
             }
@@ -89,7 +88,7 @@ class ServerBluetooth {
             pAdvertising->addServiceUUID(pService->getUUID());
             pAdvertising->setScanResponse(false);
             pAdvertising->setMinPreferred(0x0);  // set value to 0x00 to not advertise this parameter
-            BLEDevice::startAdvertising();
+            startAdvertising();
             Serial.println("Waiting a client connection to notify...");
         };
 

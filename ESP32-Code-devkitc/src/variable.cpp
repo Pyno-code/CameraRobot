@@ -2,21 +2,21 @@
 
 
 namespace variable {
-    bool workingStatus;
-    bool wifiConnectedStatus;
-    bool bluetoothConnectedStatus;
-    bool serverTcpConnectedStatus;
+    extern bool workingStatus;
+    extern bool wifiConnectedStatus;
+    extern bool bluetoothConnectedStatus;
+    extern bool serverTcpConnectedStatus;
     
-    bool orderWorking;
-    bool orderWifiConnection;
+    extern bool orderWorking;
+    extern bool orderWifiConnection;
     
-    bool wifiInitialized;
-    bool serverTcpInitialized;
+    extern bool wifiInitialized;
+    extern bool serverTcpInitialized;
 
-    String ssid;
-    String password;
+    extern String ssid;
+    extern String password;
 
-    String ip;
-    const int port = 5000;
+    extern String ip;
+    extern int port;
 }
 

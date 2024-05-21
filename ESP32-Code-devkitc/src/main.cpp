@@ -13,6 +13,24 @@ BluetoothController* bleController;
 WiFiController* wifiController;
 ServerController* serverController;
 
+bool variable::workingStatus;
+bool variable::wifiConnectedStatus;
+bool variable::bluetoothConnectedStatus;
+bool variable::serverTcpConnectedStatus;
+
+bool variable::orderWorking;
+bool variable::orderWifiConnection;
+
+bool variable::wifiInitialized;
+bool variable::serverTcpInitialized;
+
+String variable::ssid;
+String variable::password;
+
+String variable::ip;
+int variable::port = 5000;
+
+ 
 
 void setup() {
   Serial.begin(115200);
@@ -33,9 +51,8 @@ void loop() {
   bleController->loop();
 
   if (variable::bluetoothConnectedStatus) {
-    
-    Serial.println("Bluetooth connected");
-    delay(10000);
+
+    delay(1000); // attendre 1 seconde
 
   } else {
     // si j'ai l'ordre de m'arrêter ou si je ne suis pas connecté en bluetooth

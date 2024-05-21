@@ -5,6 +5,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <queue>
+#include <LinkedList.h>
+
+
 
 class CharacteristicCallBack : public BLECharacteristicCallbacks {
 private:
@@ -65,16 +68,13 @@ public:
         : uuid(uuid_), notify(notify_), write(write_), read(read_) {
 
         pService = pServer->getServiceByUUID(uuidService_);
-
-        Serial.print("Pointeur pService : 0x");
-        Serial.println((size_t)pService, HEX);
-
         pCharacteristic = pService->createCharacteristic(
             uuid,
             BLECharacteristic::PROPERTY_READ |
             BLECharacteristic::PROPERTY_WRITE |
             BLECharacteristic::PROPERTY_NOTIFY
         );
+
 
         pBLE2902 = new BLE2902();
         pBLE2902->setNotifications(true);
@@ -83,6 +83,7 @@ public:
         callback = new CharacteristicCallBack();
         pCharacteristic->setCallbacks(callback);
         pCharacteristic->setValue("");
+
     }
 
     bool hasValue() {
