@@ -13,16 +13,16 @@ BluetoothController* bleController;
 WiFiController* wifiController;
 ServerController* serverController;
 
-bool variable::workingStatus;
-bool variable::wifiConnectedStatus;
-bool variable::bluetoothConnectedStatus;
-bool variable::serverTcpConnectedStatus;
+bool variable::workingStatus = false;
+bool variable::wifiConnectedStatus = false;
+bool variable::bluetoothConnectedStatus = false;
+bool variable::serverTcpConnectedStatus = false;
 
-bool variable::orderWorking;
-bool variable::orderWifiConnection;
+bool variable::orderWorking = false;
+bool variable::orderWifiConnection = false;
 
-bool variable::wifiInitialized;
-bool variable::serverTcpInitialized;
+bool variable::wifiInitialized = false;
+bool variable::serverTcpInitialized = false;
 
 String variable::ssid;
 String variable::password;
@@ -46,19 +46,80 @@ void setup() {
 }
 
 void loop() {
+  
   bleController->loop();
 
-  if (variable::bluetoothConnectedStatus) {
+  if (variable::bluetoothConnectedStatus && variable::orderWorking) {
 
-    delay(1000); // attendre 1 seconde
+
+    // ordre de marcher
+    delay(500);
+    variable::workingStatus = true;
+
+    if (variable::orderWifiConnection) {
+    // si j'ai l'ordre de me connecter au wifi
+      if (!variable::wifiInitialized) {
+        // si le wifi n'est pas initialisé
+        wifiController = new WiFiController();
+
+        variable::wifiInitialized = true;
+        variable::wifiConnectedStatus = false;
+        variable::serverTcpInitialized = false;
+        variable::serverTcpConnectedStatus = false;
+
+        Serial.println("Wifi initialized");
+      }
+
+      if (!wifiController->isConnected()) {
+        variable::wifiConnectedStatus = false;
+        variable::serverTcpInitialized = false;
+        variable::serverTcpConnectedStatus = false;
+
+        // si le wifi n'est pas connecté
+        bool connected = wifiController->connect(variable::ssid.c_str(), variable::password.c_str());
+      
+        if (connected) {
+          // si le wifi est connecté
+          Serial.println("Wifi connected");
+          variable::wifiConnectedStatus = true;
+          variable::ip = wifiController->getLocalIP().toString();
+        }
+      } else {
+
+        // si le wifi est connecté
+        if (!variable::serverTcpInitialized) {
+          // si le serveur tcp n'est pas initialisé
+          serverController = new ServerController(variable::port);
+          variable::serverTcpInitialized = true;
+          variable::serverTcpConnectedStatus = false;
+          Serial.println("Server tcp initialized");
+        }
+
+      }
+
+    
+    } else {
+      if (variable::wifiInitialized) {
+        if (wifiController->isConnected()) {
+          wifiController->disconnect();
+          variable::wifiConnectedStatus = false;
+          variable::wifiInitialized = false;
+          Serial.println("Wifi disconnected");
+        }
+      }
+    }
 
   } else {
-    // si j'ai l'ordre de m'arrêter ou si je ne suis pas connecté en bluetooth
-    variable::wifiInitialized = false;
-    variable::serverTcpInitialized = false;
-    
+    // ordre de s'arrêter
     variable::workingStatus = false;
     variable::wifiConnectedStatus = false;
     variable::serverTcpConnectedStatus = false;
+
+    variable::wifiInitialized = false;
+    variable::serverTcpInitialized = false;
+
+    variable::orderWifiConnection = false;
+    variable::orderWorking = false;
   }
+
 }

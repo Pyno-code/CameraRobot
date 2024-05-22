@@ -74,14 +74,17 @@ class BluetoothController {
         // Cette fonction est un exemple de l'utilisation du contrôleur, elle ne doit pas être appelée.
         void loop() {
             if (!pServerBluetooth->isDeviceConnected()) {
-                Serial.println("Device not connected. Searching for device ...");
                 variable::bluetoothConnectedStatus = false;
+                
+                Serial.println("ERROR ->");
                 pServerBluetooth->startAdvertising();
+                Serial.println("<- ERROR");
+
                 delay(2000);
                 if (pServerBluetooth->isDeviceConnected()) {
-                    Serial.println("Device found ...");
                     variable::bluetoothConnectedStatus = true;
                 }
+
             } else {
                 
                 

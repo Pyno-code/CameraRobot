@@ -15,3 +15,17 @@ SERVER_TCP_STATUS_UUID = "09366094-9e6d-45ed-9a5e-d6da66e366fa"
 ORDER_WIFI_CONNECTION_UUID = "60a8d493-3283-404b-8a99-7523a7f8dbc6"
 ORDER_WORKING_UUID = "40265fbb-1001-4675-b93f-1e2c618e066b"
 #//************************************************************
+
+UUIDS = {
+    SSID_UUID : "SSID",
+    PASSWORD_UUID : "Password",
+    IP_UUID : "IP",
+    PORT_UUID : "Port",
+    WIFI_STATUS_UUID : "WiFi Status",
+    WORKING_STATUS_UUID : "Working Status",
+    SERVER_TCP_STATUS_UUID : "Server TCP Status",
+    ORDER_WIFI_CONNECTION_UUID : "Order WiFi Connection",
+    ORDER_WORKING_UUID : "Order Working"
+}
+
+#//************************************************************

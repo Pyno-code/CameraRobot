@@ -14,11 +14,11 @@ class ServerCallback: public BLEServerCallbacks {
 
         void onConnect(BLEServer* pServer) {
             deviceConnected = true;
-            Serial.println("Device connected");
+            Serial.println("Device connected ...");
         };
 
         void onDisconnect(BLEServer* pServer) {
-            Serial.println("Device disconnected");
+            Serial.println("Device disconnected ...");
             deviceConnected = false;
         };
 };
@@ -44,18 +44,6 @@ class ServerBluetooth {
             pServer->setCallbacks(pServerCallback);
 
             pService = pServer->createService(SERVICE_UUID, 32);
-
-            /*BLECharacteristic* pCharacteristic_2 = pService->createCharacteristic(
-                      "1c95d5e3-d8f7-413a-bf3d-7a2e5d7be87e",
-                      BLECharacteristic::PROPERTY_READ   |
-                      BLECharacteristic::PROPERTY_WRITE  |                      
-                      BLECharacteristic::PROPERTY_NOTIFY
-                    );
-            
-            BLE2902* pBLE2902_2 = new BLE2902();
-            pBLE2902_2->setNotifications(true);
-            pCharacteristic_2->addDescriptor(pBLE2902_2);
-            pCharacteristic_2->setValue("nothing");*/
         };
 
         void startAdvertising() {
@@ -64,7 +52,9 @@ class ServerBluetooth {
                 isAdvertising = false;
             }
             if (!isAdvertising) {
+                Serial.println("ERROR2 ->");
                 pServer->startAdvertising();
+                Serial.println("-> ERROR2");
                 isAdvertising = true;
             }
         };

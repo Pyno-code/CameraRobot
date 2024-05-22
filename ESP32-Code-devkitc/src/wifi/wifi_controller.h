@@ -23,7 +23,6 @@ class WiFiController {
                 delay(1000);
                 retries += 1;
             }
-            Serial.println();
             return false;
         }
         

@@ -15,11 +15,11 @@ async def connect_to_server(address):
     data = await client.read_gatt_char(ORDER_WORKING_UUID)
     print(data.decode("utf-8"))
 
-    time.sleep(3)
+    await client.write_gatt_char(ORDER_WORKING_UUID, bytearray("true", "utf-8"))
 
-    await client.write_gatt_char(ORDER_WORKING_UUID, bytearray("false", "utf-8"))
+    data = await client.read_gatt_char(ORDER_WORKING_UUID)
+    print(data.decode("utf-8"))
 
-    time.sleep(3)
 
     # Faire quelque chose avec le client connecté
     # Par exemple, lire des caractéristiques ou écrire des données

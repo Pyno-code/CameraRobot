@@ -82,16 +82,14 @@ public:
         stepper.setCurrentPosition(angle/microstepping);
     }
 };
-
 #define STEP_PIN_BASE   10
 #define DIR_PIN_BASE   9
 
-#define STEP_PIN_BOTTOM  16
-#define DIR_PIN_BOTTOM   15
+#define STEP_PIN_BOTTOM  7
+#define DIR_PIN_BOTTOM   6
 
-#define STEP_PIN_TOP  7
-#define DIR_PIN_TOP   6
-
+#define STEP_PIN_TOP  5
+#define DIR_PIN_TOP   4
 
 class ControlMotors {
     private:
@@ -101,9 +99,9 @@ class ControlMotors {
     
     public:
         ControlMotors() : 
-            stepper_base(Moteur(STEP_PIN_BASE, DIR_PIN_BASE, 10, 1.8)),
-            stepper_bottom(Moteur(STEP_PIN_BOTTOM, DIR_PIN_BOTTOM, 10, 1.8)),
-            stepper_top(Moteur(STEP_PIN_TOP, DIR_PIN_TOP, 10/4, 1.8/4)) {
+            stepper_base(Moteur(STEP_PIN_BASE, DIR_PIN_BASE, 1, 1.8)),
+            stepper_bottom(Moteur(STEP_PIN_BOTTOM, DIR_PIN_BOTTOM, 1, 1.8)),
+            stepper_top(Moteur(STEP_PIN_TOP, DIR_PIN_TOP, 1/4, 1.8/4)) {
             moveMotors(360, 360, 360);
         }
 
