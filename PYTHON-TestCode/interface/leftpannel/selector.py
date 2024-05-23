@@ -7,15 +7,17 @@ class Selector(tk.Frame):
 
         self.status = "Bluetooth"
 
+        self.parent = parent
+
         # Create a frame for the buttons
         button_frame = tk.Frame(self, bg="white")
         button_frame.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
         bluetooth_button = tk.Button(button_frame, text="Bluetooth", command=lambda: self.update_status("Bluetooth"))
-        bluetooth_button.grid(row=0, column=1, sticky="nsew")
+        bluetooth_button.grid(row=0, column=0, sticky="nsew")
 
         wifi_button = tk.Button(button_frame, text="Wifi", command=lambda: self.update_status("Wifi"))
-        wifi_button.grid(row=0, column=0, sticky="nsew")
+        wifi_button.grid(row=0, column=1, sticky="nsew")
 
         motors_button = tk.Button(button_frame, text="Motors", command=lambda: self.update_status("Motors"))
         motors_button.grid(row=0, column=2, sticky="nsew")
@@ -38,7 +40,8 @@ class Selector(tk.Frame):
 
     def update_status(self, status):
         self.status = status
-        self.update_label(f"Selected: {status}")
+        self.update_label(f"{status}")
+        self.parent.update_pannels(status)
 
     def update_label(self, text):
         self.display_label.config(text=text)

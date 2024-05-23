@@ -10,12 +10,12 @@ class MainApplication(tk.Tk):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.title("Responsive Tkinter Window")
-        self.geometry("800x600")  # Set initial size of the window
+        self.geometry("1080x720")  # Set initial size of the window
 
         # Configure the grid to allow responsive resizing
         self.grid_columnconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=0)
-        self.grid_columnconfigure(2, weight=3)
+        self.grid_columnconfigure(2, weight=4)
         self.grid_rowconfigure(0, weight=1)
 
         # Create frames
