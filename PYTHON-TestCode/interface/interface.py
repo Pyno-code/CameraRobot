@@ -9,7 +9,7 @@ import tkinter as tk
 class MainApplication(tk.Tk):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.title("Responsive Tkinter Window")
+        self.title("CameraRobot")
         self.geometry("1080x720")  # Set initial size of the window
 
         # Configure the grid to allow responsive resizing

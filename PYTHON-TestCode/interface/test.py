@@ -1,37 +1,36 @@
-
-from tkinter import ttk
-
-
-class LeftFrame(tk.Frame):
-    def __init__(self, parent, *args, **kwargs):
-        super().__init__(parent, *args, **kwargs)
-
-        self.config(bg="white")  # Just to differentiate visually
-        self.pack_propagate(False)   # Prevent frame from resizing to fit its content
-
-        # Create the Selector widget
-        selector = Selector(self)
-        selector.grid(row=0, columnspan=1, sticky="nsew")
-
-        separator1 = ttk.Separator(self, orient='horizontal')
-        separator1.grid(row=1, columnspan=1, sticky="ew", pady=1)
-
-        # Create the StatusPannel widget
-        status_pannel = StatusPannel(self)
-        status_pannel.grid(row=2, columnspan=1, sticky="nsew")
-
-        separator2 = ttk.Separator(self, orient='horizontal')
-        separator2.grid(row=3, columnspan=1, sticky="ew", pady=1)
+import tkinter as tk
 
 
-        # Create the CommandPannel widget
-        command_pannel = CommandPannel(self)
-        command_pannel.grid(row=4, columnspan=1, sticky="nsew")
+# Function to update the label and button text based on the content of the Text widget
+def revise_content():
+   # Get the text from the Text widget (from the first character to the end, excluding the last character)
+   new_text = text_widget.get("1.0", "end-1c")
 
-        # Configure grid weights for responsive resizing
-        self.grid_rowconfigure(0, weight=1)  # Selector
-        self.grid_rowconfigure(1, weight=0)  # Separator
-        self.grid_rowconfigure(2, weight=5)  # StatusPannel
-        self.grid_rowconfigure(3, weight=0)  # Separator
-        self.grid_rowconfigure(4, weight=6)  # CommandPannel
-        self.grid_columnconfigure(0, weight=1)
+   # Update the label text with the new content
+   label.config(text=f"Updated Label: {new_text}")
+
+   # Update the button text with the new content
+   button.config(text=f"Updated Button: {new_text}")
+
+# Create the main application window
+app = tk.Tk()
+app.title("Text Automatically Resize in Buttons and Lables")
+app.geometry("720x250")
+
+# Create a Text widget with a specified height, width, and word wrapping
+text_widget = tk.Text(app, height=3, width=30, wrap="word")
+text_widget.insert("1.0", "Type here...")  # Insert initial text into the Text widget
+
+# Create a Label widget with an initial text
+label = tk.Label(app, text="Initial Label")
+
+# Create a Button widget with the label "Update Content" and associate it with the update_content function
+button = tk.Button(app, text="Update Content", command=revise_content)
+
+# Pack the widgets into the main window with some padding
+text_widget.pack(pady=10)
+label.pack(pady=10)
+button.pack(pady=10)
+
+# Run the Tkinter event loop to keep the application running
+app.mainloop()
