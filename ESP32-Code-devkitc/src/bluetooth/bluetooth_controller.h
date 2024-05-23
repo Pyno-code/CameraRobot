@@ -6,6 +6,8 @@
 #include "bluetooth/characteristic.h"
 #include "bluetooth/server.h"
 #include "variable.cpp"
+#include "logger.h"
+
 
 
 #define SERVICE_UUID "4fafc201-1fb5-459e-8fcc-c5c9c331914b"
@@ -34,7 +36,7 @@ class BluetoothController {
         
     public:
         BluetoothController(std::string deviceName) {
-            Serial.println("Initializing Bluetooth Controller");
+            logger::print(logger::INFO, "Initializing Bluetooth Controller");
             BLEDevice::init(deviceName);
 
 
@@ -43,9 +45,9 @@ class BluetoothController {
 
            
             // fin des définitions des UUID
-            Serial.println("Initializing bluetooth server ...");
+            logger::print(logger::INFO, "Initializing bluetooth server ...");
             pServerBluetooth = new ServerBluetooth(deviceName, SERVICE_UUID);
-            Serial.println("Bluetooth Server initialized");
+            logger::print(logger::INFO, "Bluetooth Server initialized");
             //cré les caractéristiques et ensuite start le serveur
             
             //toutes les charactéristiques doivent être créées ici
@@ -66,7 +68,8 @@ class BluetoothController {
             Characteristic orderWorkingCharacteristic = *createCharacteristic(ORDER_WORKING_UUID);
             //************************************************************
             pServerBluetooth->startServer();
-            Serial.println("Bluetooth Controller initialized");
+            logger::print(logger::INFO, "Bluetooth Controller initialized");
+            logger::print(logger::INFO, "Fetching devices ...");
             
         }
 
@@ -76,9 +79,7 @@ class BluetoothController {
             if (!pServerBluetooth->isDeviceConnected()) {
                 variable::bluetoothConnectedStatus = false;
                 
-                Serial.println("ERROR ->");
                 pServerBluetooth->startAdvertising();
-                Serial.println("<- ERROR");
 
                 delay(2000);
                 if (pServerBluetooth->isDeviceConnected()) {
@@ -94,7 +95,7 @@ class BluetoothController {
                 if ((characteristics)[ORDER_WORKING_UUID]->hasValue()) {
                     String orderWorking = (characteristics)[ORDER_WORKING_UUID]->getMessage();
                     variable::orderWorking = stringToBool(orderWorking);
-                    Serial.println("Order working : " + orderWorking);
+                    logger::print(logger::INFO, "Order working : " + orderWorking);
                 }
 
 
@@ -102,21 +103,21 @@ class BluetoothController {
                 if ((characteristics)[ORDER_WIFI_CONNECTION_UUID]->hasValue()) {
                     String orderWifiConnection = (characteristics)[ORDER_WIFI_CONNECTION_UUID]->getMessage();
                     variable::orderWifiConnection = stringToBool(orderWifiConnection);
-                    Serial.println("Order wifi connection : " + orderWifiConnection);
+                    logger::print(logger::INFO, "Order wifi connection : " + orderWifiConnection);
                 }
                 
 
                 // valeur de ssid
                 if ((characteristics)[SSID_UUID]->hasValue()) {
                     variable::ssid = (characteristics)[SSID_UUID]->getMessage();
-                    Serial.println("SSID : " + variable::ssid);
+                    logger::print(logger::INFO, "SSID : " + variable::ssid);
                 }
                 
 
                 // valeur de password
                 if ((characteristics)[PASSWORD_UUID]->hasValue()) {
                     variable::password = (characteristics)[PASSWORD_UUID]->getMessage();
-                    Serial.println("Password : " + variable::password);
+                    logger::print(logger::INFO, "Password : " + variable::password);
                 }
 
                 // écrire les status si la valeur a changé
@@ -124,35 +125,35 @@ class BluetoothController {
                 // status de connexion bluetooth
                 if (variable::wifiConnectedStatus != stringToBool((characteristics)[WIFI_STATUS_UUID]->getCurrentValue())) {
                     (characteristics)[WIFI_STATUS_UUID]->setValue(boolToString(variable::wifiConnectedStatus));
-                    Serial.println("Wifi status : " + boolToString(variable::wifiConnectedStatus));
+                    logger::print(logger::INFO, "Wifi status : " + boolToString(variable::wifiConnectedStatus));
                 }
 
                 
                 // status de connexion wifi
                 if (variable::workingStatus != stringToBool((characteristics)[WORKING_STATUS_UUID]->getCurrentValue())) {
                     (characteristics)[WORKING_STATUS_UUID]->setValue(boolToString(variable::workingStatus));
-                    Serial.println("Working status : " + boolToString(variable::workingStatus));
+                    logger::print(logger::INFO, "Working status : " + boolToString(variable::workingStatus));
                 }
 
 
                 // status de connexion serveur tcp
                 if (variable::serverTcpConnectedStatus != stringToBool((characteristics)[SERVER_TCP_STATUS_UUID]->getCurrentValue())) {
                     (characteristics)[SERVER_TCP_STATUS_UUID]->setValue(boolToString(variable::serverTcpConnectedStatus));
-                    Serial.println("Server tcp status : " + boolToString(variable::serverTcpConnectedStatus));
+                    logger::print(logger::INFO, "Server tcp status : " + boolToString(variable::serverTcpConnectedStatus));
                 }
 
 
                 // écriture de l'ip
                 if (variable::ip != (characteristics)[IP_UUID]->getCurrentValue()) {
                     (characteristics)[IP_UUID]->setValue(variable::ip);
-                    Serial.println("IP : " + variable::ip);
+                    logger::print(logger::INFO, "IP : " + variable::ip);
                 }
 
 
                 // écriture du port
                 if (variable::port != (characteristics)[PORT_UUID]->getCurrentValue().toInt()) {
                     (characteristics)[PORT_UUID]->setValue(String(variable::port));
-                    Serial.println("Port : " + String(variable::port));
+                    logger::print(logger::INFO, "Port : " + String(variable::port));
                 }
             }
         }

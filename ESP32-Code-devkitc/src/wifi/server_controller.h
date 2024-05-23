@@ -1,4 +1,5 @@
 #include "wifi/server.h"
+#include "logger.h"
 
 
 class ServerController {
@@ -16,7 +17,7 @@ class ServerController {
             server->listen();
             server->readMessage();
             if (server->hasMessage()) {
-                Serial.print("Message received : ");
+                logger::print(logger::INFO, "Message received : ", false);
                 Serial.println(server->getMessage());
             }
         }

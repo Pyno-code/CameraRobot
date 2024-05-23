@@ -3,6 +3,7 @@
 #include <WiFiServer.h>
 #include <Vector.h>
 #include <LinkedList.h>
+#include "logger.h"
 
 
 
@@ -55,7 +56,7 @@ class TcpServer {
             server.begin();
             isRunning = true;
             server.setNoDelay(true);
-            Serial.print("Server started at : ");
+            logger::print(logger::INFO, "Server started at : ", false);
             Serial.print(WiFi.localIP());
             Serial.print(":");
             Serial.println(port);
@@ -66,7 +67,7 @@ class TcpServer {
         void listen() {
             if (!client.connected()) {
                 delay(1000);
-                Serial.println("Listening for clients...");
+                logger::print(logger::INFO, "Listening for clients...");
                 TcpClient newClient(server.available());
                 if (newClient) {
                     client = newClient;
@@ -95,7 +96,7 @@ class TcpServer {
 
         void sendMessage(const String& message) {
             client.print(message);
-            Serial.print("Sent message to client ");
+            logger::print(logger::INFO, "Sent message to client ", false);
             Serial.print(": ");
             Serial.println(message);
         }
@@ -106,7 +107,7 @@ class TcpServer {
 
             server.stop();
             isRunning = false;
-            Serial.println("Server stopped");
+            logger::print(logger::INFO, "Server stopped");
         }
 
         bool isAvailable() {

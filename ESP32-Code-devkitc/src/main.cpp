@@ -3,6 +3,8 @@
 #include <wifi/server_controller.h>
 #include <HardwareSerial.h>
 #include <variable.cpp>
+#include "logger.h"
+
 
 
 // Définir le nom du périphérique BLE
@@ -30,13 +32,13 @@ String variable::password;
 String variable::ip;
 int variable::port = 5000;
 
- 
+
 
 void setup() {
   Serial.begin(115200);
-  
+
   delay(5000); // attendre que le moniteur série se connecte
-  Serial.println("Hey working !");
+  logger::print(logger::INFO, "Hey working !");
 
   bleController = new BluetoothController(DEVICE_NAME);
 
@@ -67,7 +69,7 @@ void loop() {
         variable::serverTcpInitialized = false;
         variable::serverTcpConnectedStatus = false;
 
-        Serial.println("Wifi initialized");
+        logger::print(logger::INFO, "Wifi initialized");
       }
 
       if (!wifiController->isConnected()) {
@@ -80,7 +82,7 @@ void loop() {
       
         if (connected) {
           // si le wifi est connecté
-          Serial.println("Wifi connected");
+          logger::print(logger::INFO, "Wifi connected");
           variable::wifiConnectedStatus = true;
           variable::ip = wifiController->getLocalIP().toString();
         }
@@ -92,19 +94,16 @@ void loop() {
           serverController = new ServerController(variable::port);
           variable::serverTcpInitialized = true;
           variable::serverTcpConnectedStatus = false;
-          Serial.println("Server tcp initialized");
+          logger::print(logger::INFO, "Server tcp initialized");
         }
-
-      }
-
-    
+      }    
     } else {
       if (variable::wifiInitialized) {
         if (wifiController->isConnected()) {
           wifiController->disconnect();
           variable::wifiConnectedStatus = false;
           variable::wifiInitialized = false;
-          Serial.println("Wifi disconnected");
+          logger::print(logger::INFO, "Wifi disconnected");
         }
       }
     }
@@ -121,5 +120,4 @@ void loop() {
     variable::orderWifiConnection = false;
     variable::orderWorking = false;
   }
-
 }

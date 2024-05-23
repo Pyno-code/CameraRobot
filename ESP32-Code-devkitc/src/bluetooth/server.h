@@ -1,6 +1,7 @@
 #include <BLEServer.h>
 #include <BLEDevice.h>
 #include <HardwareSerial.h>
+#include "logger.h"
 
 class ServerCallback: public BLEServerCallbacks {
 
@@ -14,11 +15,11 @@ class ServerCallback: public BLEServerCallbacks {
 
         void onConnect(BLEServer* pServer) {
             deviceConnected = true;
-            Serial.println("Device connected ...");
+            logger::print(logger::INFO, "Device connected ...");
         };
 
         void onDisconnect(BLEServer* pServer) {
-            Serial.println("Device disconnected ...");
+            logger::print(logger::INFO, "Device disconnected ...");
             deviceConnected = false;
         };
 };
@@ -36,7 +37,7 @@ class ServerBluetooth {
     public:
         ServerBluetooth(std::string deviceName, const std::string& SERVICE_UUID) {            
             BLEAddress bleAddress = BLEDevice::getAddress();
-            Serial.print("Adresse Mac : " );
+            logger::print(logger::INFO, "Adresse Mac : ", false);
             Serial.println(bleAddress.toString().c_str());
             
             pServer = BLEDevice::createServer();
@@ -52,16 +53,14 @@ class ServerBluetooth {
                 isAdvertising = false;
             }
             if (!isAdvertising) {
-                Serial.println("ERROR2 ->");
                 pServer->startAdvertising();
-                Serial.println("-> ERROR2");
                 isAdvertising = true;
             }
         };
 
         void stopAdvertising() {
             if (isAdvertising) {
-                Serial.println("stoping ble signal");
+                logger::print(logger::INFO, "stoping ble signal");
                 pAdvertising->stop();
                 isAdvertising = false;
             }
@@ -79,7 +78,7 @@ class ServerBluetooth {
             pAdvertising->setScanResponse(false);
             pAdvertising->setMinPreferred(0x0);  // set value to 0x00 to not advertise this parameter
             startAdvertising();
-            Serial.println("Waiting a client connection to notify...");
+            logger::print(logger::INFO, "Waiting a client connection to notify...");
         };
 
         BLEServer *getServer() {
