@@ -1,12 +1,12 @@
 
 
-from leftpannel.leftframe import LeftFrame
-from rightpannel.rightframe import RightFrame
+from interface.leftpannel.leftframe import LeftFrame
+from interface.rightpannel.rightframe import RightFrame
 from tkinter import ttk
 import tkinter as tk
 
 
-class MainApplication(tk.Tk):
+class App(tk.Tk):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.title("CameraRobot")
@@ -31,5 +31,5 @@ class MainApplication(tk.Tk):
         self.right_frame.grid(row=0, column=2, sticky="nsew")
 
 if __name__ == "__main__":
-    app = MainApplication()
+    app = App()
     app.mainloop()

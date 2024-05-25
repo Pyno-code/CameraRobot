@@ -45,15 +45,18 @@ class CommandInterface(tk.Frame):
         # Effacer le contenu de l'entrée de texte
         self.entry.delete(0, tk.END)
         # Afficher la commande dans le widget de texte défilant
+
+        self.log(CommandInterface.INFO, f">>> {command}")
         self.text_area.configure(state="normal")
-        self.text_area.insert(tk.END, f">>> {command}")
+        self.text_area.insert(tk.END, f">>> {command}\n")
         self.text_area.see(tk.END)
         self.text_area.configure(state="disabled")
         # Exécuter la commande (à remplacer par votre propre logique)
         # Ici, nous simulons l'exécution d'une commande en affichant un message de confirmation
         result = ""
+        self.log(CommandInterface.WARNING, f"Command not found: {command}")
         self.text_area.configure(state="normal")
-        self.text_area.insert(tk.END, f"{result}")
+        self.text_area.insert(tk.END, f"{result}\n")
         self.text_area.see(tk.END)
         self.text_area.configure(state="disabled")
     

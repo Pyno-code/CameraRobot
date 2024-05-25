@@ -1,6 +1,6 @@
 import tkinter as tk
-from rightpannel.toolbar.toolbar import Toolbar
-from rightpannel.mainframe.mainframe import MainFrame
+from interface.rightpannel.toolbar.toolbar import Toolbar
+from interface.rightpannel.mainframe.mainframe import MainFrame
 
 class RightFrame(tk.Frame):
     def __init__(self, parent, *args, **kwargs):

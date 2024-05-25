@@ -1,12 +1,12 @@
 import tkinter as tk
 from tkinter import ttk
-from leftpannel.selector import Selector
-from leftpannel.bluetoothpannels.commandpannel import BluetoothCommandPannel
-from leftpannel.bluetoothpannels.statuspannel import BluetoothStatusPannel
-from leftpannel.motorspannels.commandpannel import MotorsCommandPannel
-from leftpannel.motorspannels.statuspannel import MotorsStatusPannel
-from leftpannel.wifipannels.commandpannel import WifiCommandPannel
-from leftpannel.wifipannels.statuspannel import WifiStatusPannel
+from interface.leftpannel.selector import Selector
+from interface.leftpannel.bluetoothpannels.commandpannel import BluetoothCommandPannel
+from interface.leftpannel.bluetoothpannels.statuspannel import BluetoothStatusPannel
+from interface.leftpannel.motorspannels.commandpannel import MotorsCommandPannel
+from interface.leftpannel.motorspannels.statuspannel import MotorsStatusPannel
+from interface.leftpannel.wifipannels.commandpannel import WifiCommandPannel
+from interface.leftpannel.wifipannels.statuspannel import WifiStatusPannel
 class LeftFrame(tk.Frame):
     def __init__(self, parent, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)

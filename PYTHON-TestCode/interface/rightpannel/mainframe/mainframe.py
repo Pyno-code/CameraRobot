@@ -1,6 +1,6 @@
 import tkinter as tk
-from rightpannel.mainframe.camera.camera import CameraWidget
-from rightpannel.mainframe.commandinterface.commandinterface import CommandInterface
+from interface.rightpannel.mainframe.camera.camera import CameraWidget
+from interface.rightpannel.mainframe.commandinterface.commandinterface import CommandInterface
 
 class MainFrame(tk.Frame):
     def __init__(self, parent, *args, **kwargs):
