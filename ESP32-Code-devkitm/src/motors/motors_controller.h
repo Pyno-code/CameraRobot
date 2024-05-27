@@ -1,87 +1,65 @@
 #include <AccelStepper.h>
 
-class Moteur {
-private:
-    int stepPin;
-    int dirPin;
-    long target_step_position = 0;
-    long target_angle_position = 0;
-    float microstepping = 0;
-    int speed = 0;
+class Motor : public AccelStepper {
+    private:
+        float microSteping;
+    public:
+        Motor(uint8_t stepPin, uint8_t dirPin, float microStepping_) : AccelStepper(AccelStepper::DRIVER, stepPin, dirPin) {
+            microSteping = microStepping_;
+        }
 
-    AccelStepper stepper;
+        void init() {
+            setMaxSpeed(200*20);
+            setSpeed(200*20);
+            setAcceleration(200*20);
+        }
 
-public:
-    Moteur(int stepPin, int dirPin, int speed, float microstepping) : microstepping(microstepping), stepPin(stepPin), dirPin(dirPin), speed(speed), stepper(AccelStepper::DRIVER, stepPin, dirPin) {
-        resetSpeed();
-        stepper.setAcceleration(speed/2);
-    }
-    
-    void setSpeed(int speed_) {
-        speed = speed_;
-        stepper.setSpeed(speed);
-    }
+        void setSpeed(float speed) {
+            AccelStepper::setSpeed(speed * microSteping/200);
+            Serial.print("Speed: ");
+            Serial.println(speed);
+        }
 
-    void resetSpeed() {
-        stepper.setSpeed(speed);
-    }
+        void setMaxSpeed(float speed) {
+            AccelStepper::setMaxSpeed(speed * microSteping/200);
+        }
 
-    void setTargetPosition(int position) {
-        target_step_position = position;
-        target_angle_position = position*microstepping;
-    }
+        void setTargetPosition(long position) {
+            AccelStepper::moveTo(position * microSteping/200);
+            setSpeed(200);
+        }
 
-    void setTargetRelativePosition(int relative_position) {
-        target_step_position += relative_position;
-        target_angle_position += relative_position*microstepping;
-    }
+        void addTargetPosition(long position) {
+            AccelStepper::move(position * microSteping/200);
+            setSpeed(200);
+        }
 
-    void setTargetAngle(long angle) {
-        target_angle_position = angle;
-        target_step_position = int(target_angle_position/microstepping);
-    }
-    
-    void setTargetRelativeAngle(long angle) {
-        target_angle_position += angle;
-        target_step_position = int(target_angle_position/microstepping);
-    }
+        void setTargetAngle(float angle) {
+            setTargetPosition(angle * microSteping/1.8);
+        }
 
-    long getCurrentPosition() {
-        return stepper.currentPosition();
-    }
+        void addTargetAngle(float angle) {
+            addTargetPosition(angle * microSteping/1.8);
+        }
 
-    long getCurrentAngle() {
-        return stepper.currentPosition()*microstepping;
-    }
+        void changeDirection() {
+            setSpeed(-speed());
+        }
 
-    long getTargetPosition() {
-        return target_step_position;
-    }
+        void setPositiveDirection() {
+            setSpeed(abs(speed()));
+        }
 
-    long getTargetAngle() {
-        return target_angle_position;
-    }
+        void setNegativeDirection() {
+            setSpeed(-abs(speed()));
+        }
 
-    void move(){
-        resetSpeed();
-        stepper.run();
-    }
 
-    void moveToPosition() {
-        // check if it does it in the two direction
-        if ((stepper.currentPosition() != target_step_position))
-            resetSpeed();
-            stepper.run();
-    }
 
-    void setCurrentPosition(int position) {
-        stepper.setCurrentPosition(position);
-    }
 
-    void setCurrentAngle(long angle) {
-        stepper.setCurrentPosition(angle/microstepping);
-    }
+
 };
+
 #define STEP_PIN_BASE   10
 #define DIR_PIN_BASE   9
 
@@ -90,35 +68,3 @@ public:
 
 #define STEP_PIN_TOP  5
 #define DIR_PIN_TOP   4
-
-class ControlMotors {
-    private:
-        Moteur stepper_base;
-        Moteur stepper_bottom;
-        Moteur stepper_top;
-    
-    public:
-        ControlMotors() : 
-            stepper_base(Moteur(STEP_PIN_BASE, DIR_PIN_BASE, 1, 1.8)),
-            stepper_bottom(Moteur(STEP_PIN_BOTTOM, DIR_PIN_BOTTOM, 1, 1.8)),
-            stepper_top(Moteur(STEP_PIN_TOP, DIR_PIN_TOP, 1/4, 1.8/4)) {
-            moveMotors(360, 360, 360);
-        }
-
-        void moveMotors(long angle_top, long angle_bottom, long angle_base) {
-            stepper_top.setTargetAngle(angle_top);
-            stepper_bottom.setTargetAngle(angle_bottom);
-            stepper_base.setTargetAngle(angle_base);
-        }
-
-        void loop() {
-            stepper_base.moveToPosition();
-            stepper_bottom.moveToPosition();
-            stepper_top.moveToPosition();
-
-            if (stepper_top.getCurrentPosition() == stepper_top.getTargetPosition()) {
-                moveMotors(-stepper_top.getCurrentPosition(), -stepper_bottom.getCurrentPosition(), -stepper_base.getCurrentPosition());
-            }
-        }
-
-};

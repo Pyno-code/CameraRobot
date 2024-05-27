@@ -2,7 +2,8 @@
 #include <OneButton.h>
 
 #include <Arduino.h>
-#include <FastAccelStepper.h>
+#include <AccelStepper.h>
+#include <motors/motors_controller.h>
 
 #define STEP_PIN_BASE   10
 #define DIR_PIN_BASE   9
@@ -20,20 +21,12 @@ OneButton button(BUTTON_PIN, true); // true pour activer le pull-up interne
 bool running = false;
 bool changeDirection = false;
 
-FastAccelStepperEngine engine = FastAccelStepperEngine();
-FastAccelStepper *stepper_base = NULL;
+AccelStepper stepper_base(AccelStepper::DRIVER, STEP_PIN_BASE, DIR_PIN_BASE);
 
 void singleClick() {
   running = !running;
   Serial.print("Running state: ");
   Serial.println(running);
-  if (running) {
-    stepper_base->runForward();
-  } else {
-    stepper_base->stopMove();
-  }
-  
-  
 }
 
 void doubleClick() {
@@ -47,20 +40,30 @@ void setup() {
   Serial.println("Starting...");
   button.attachClick(singleClick);
   button.attachDoubleClick(doubleClick);
-  
-  
-  engine.init();
-  stepper_base = engine.stepperConnectToPin(STEP_PIN_BASE); // STEP pin connected to STEP_PIN_BASE
-  stepper_base->setDirectionPin(DIR_PIN_BASE);
-  stepper_base->setSpeedInHz(100); // Set speed in Hz
-  stepper_base->setAcceleration(10000); // Set acceleration in steps/s^2
 
+  stepper_base.setMaxSpeed(10000);
+  stepper_base.setSpeed(100);
+
+  stepper_base.moveTo(100);
+  stepper_base.setAcceleration(1000);
 }
 
 void loop() {
   button.tick(); // Nécessaire pour vérifier l'état du bouton
 
   if (running) {
+    stepper_base.runSpeedToPosition();
+  }
+  if (changeDirection) {
+    Serial.println("Changing direction");
+    
+    changeDirection = false;
+    stepper_base.setSpeed(-stepper_base.speed());
+    if (stepper_base.speed() > 0) {
+      Serial.println("Sens trigo axe");
+    } else {
+      Serial.println("Sens anti-trigo axe");
+    }
   }
 }
 

@@ -4,7 +4,7 @@ from bleak import BleakClient
 from bleak import BleakScanner
 from bleak.exc import BleakError
 from tabulate import tabulate
-from constants import *
+from bluetooth_connection.constants import *
 
 
 
@@ -16,7 +16,7 @@ class BLEClient:
     async def connect_by_address(self, device_address):
         self.client = BleakClient(device_address)
         await self.client.connect()
-        return self.client.is_connected
+        return self.client.is_connected()
     
     async def connect_by_name(self, device_name):
         devices = await self.scan()
@@ -41,8 +41,8 @@ class BLEClient:
         try:
             if debug:
                 print("Scanning for BLE devices...")
-
-            devices = await BleakScanner.discover()            
+            devices = []
+            devices = await BleakScanner.discover()         
 
         except BleakError as e:
             print(f"BleakError occurred: {e}")
@@ -54,7 +54,7 @@ class BLEClient:
 
         if debug:
             self.show_devices(devices)
-
+        await asyncio.sleep(1)
         return devices    
 
     def show_devices(self, devices):
@@ -66,6 +66,11 @@ class BLEClient:
         headers = ["Index", "Name", "MAC Address"]
         print(tabulate(data, headers=headers, tablefmt="grid"))
 
+
+    def is_connected(self):
+        if self.client is not None:
+            return self.client.is_connected()
+        return False
 
 # Example usage
 async def main():

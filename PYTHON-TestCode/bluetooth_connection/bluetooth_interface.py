@@ -93,7 +93,7 @@ class AppBluetooth:
 
     async def root_loop(self):
         while self.running:
-            await asyncio.sleep(0.1)  # Allow other tasks to run
+            await asyncio.sleep(0.06)  # Allow other tasks to run
             self.root.update()  # Update the tkinter GUI
 
 

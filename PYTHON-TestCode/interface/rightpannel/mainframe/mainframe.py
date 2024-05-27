@@ -11,6 +11,7 @@ class MainFrame(tk.Frame):
 
         # Créer l'interface de commande
         self.command_interface = CommandInterface(self)
+        print("initialized")
 
         # Afficher la caméra par défaut
         self.show_command_interface()

@@ -35,7 +35,7 @@ class ServerBluetooth {
         bool isAdvertising = false;
 
     public:
-        ServerBluetooth(std::string deviceName, const std::string& SERVICE_UUID) {            
+        wServerBluetooth(std::string deviceName, const std::string& SERVICE_UUID) {            
             BLEAddress bleAddress = BLEDevice::getAddress();
             logger::print(logger::INFO, "Adresse Mac : ", false);
             Serial.println(bleAddress.toString().c_str());

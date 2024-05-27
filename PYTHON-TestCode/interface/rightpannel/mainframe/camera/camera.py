@@ -2,6 +2,7 @@ import time
 import tkinter as tk
 import cv2
 from PIL import Image, ImageTk
+from data.variable import running
 
 class CameraWidget(tk.Canvas):
     def __init__(self, parent, *args, **kwargs):
@@ -46,7 +47,7 @@ class CameraWidget(tk.Canvas):
         
         self.resizing = False
 
-    def update_video(self):
+    async def update_video(self):
         if not self.resizing and self.show_video:
             # Lire une image à partir du flux vidéo
             ret, frame = self.capture.read()
@@ -70,9 +71,8 @@ class CameraWidget(tk.Canvas):
 
                 # Garder une référence à l'image pour éviter la suppression par le garbage collector
                 self.image = image
-
-        # Planifier la prochaine mise à jour après un certain délai (en millisecondes)
-        self.after(20, self.update_video)
+            # Planifier la prochaine mise à jour après un certain délai (en millisecondes)
+            
 
 # Exemple d'utilisation
 if __name__ == "__main__":
