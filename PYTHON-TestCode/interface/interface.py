@@ -1,21 +1,29 @@
 
 
-import time
 from tkinter import ttk
 from bluetooth_connection.bluetooth_controller import BluetoothController
 from interface.leftpannel.leftframe import LeftFrame
 from interface.rightpannel.rightframe import RightFrame
 import tkinter as tk
 import asyncio
-import data.variable
+
 
 class App(tk.Tk):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, running, wifi_update_event, wifi_order_event, bluetooth_dict_values, bluetooth_order_dict, queue_logger, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
         # setup
         self.protocol("WM_DELETE_WINDOW", self.on_closing)
 
+        self.running = running
+
+        self.wifi_update_event = wifi_update_event
+        self.wifi_order_event = wifi_order_event
+
+        self.bluetooth_dict_values = bluetooth_dict_values
+        self.bluetooth_order_dict = bluetooth_order_dict
+
+        self.queue_logger = queue_logger
 
         self.title("CameraRobot")
         self.geometry("1080x720")  # Set initial size of the window
@@ -27,7 +35,7 @@ class App(tk.Tk):
         self.grid_rowconfigure(0, weight=1)
 
         # Create frames
-        self.left_frame = LeftFrame(self)
+        self.left_frame = LeftFrame(self, self.bluetooth_dict_values, self.bluetooth_order_dict)
         self.right_frame = RightFrame(self)
 
         # Create a separator
@@ -38,23 +46,29 @@ class App(tk.Tk):
         self.separator.grid(row=0, column=1, sticky="ns")
         self.right_frame.grid(row=0, column=2, sticky="nsew")
 
-        data.variable.logger = self.right_frame.main_frame.command_interface
+        self.logger = self.right_frame.main_frame.command_interface
+        self.update_video = self.right_frame.main_frame.camera_widget.update_video
+        self.update_left_pannel = self.left_frame.loop
+
+        self.queue_logger.put((self.logger.INFO,"Starting the application"))
+
+        
+        
     
     async def loop(self):
-        data.variable.logger.log(data.variable.INFO, "Application started")
-        self.update()
+        while self.running.value:
+            self.logger.log(self.queue_logger)
+            self.update()
+            await self.update_video()
+            self.update_left_pannel(self.bluetooth_dict_values)
+        self.destroy()
+        
 
     def on_closing(self):
-        data.variable.running = False
-        list_task = asyncio.all_tasks(self.loop)
-        print(list_task)
-        time.sleep(3)
-        try:
-            for task in list_task:
-                task.cancel()
-        except:
-            pass
-        self.destroy()
+        self.running.value = False
+    
+    def start(self):
+        asyncio.run(self.loop())
 
         
 

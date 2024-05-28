@@ -8,7 +8,7 @@ from interface.leftpannel.motorspannels.statuspannel import MotorsStatusPannel
 from interface.leftpannel.wifipannels.commandpannel import WifiCommandPannel
 from interface.leftpannel.wifipannels.statuspannel import WifiStatusPannel
 class LeftFrame(tk.Frame):
-    def __init__(self, parent, *args, **kwargs):
+    def __init__(self, parent, shared_dict_values, shared_dict_order, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
 
         # Create the Selector widget
@@ -26,7 +26,7 @@ class LeftFrame(tk.Frame):
         self.separator2 = ttk.Separator(self, orient='horizontal')
         self.separator2.grid(row=3, column=0, sticky="ew", pady=1)
 
-        self.command_pannel = WifiCommandPannel(self)
+        self.command_pannel = WifiCommandPannel(self, shared_dict_values)
         self.command_pannel.grid(row=4, column=0, sticky="nsew")
 
         # Configure grid weights for responsive resizing
@@ -36,28 +36,43 @@ class LeftFrame(tk.Frame):
         self.grid_rowconfigure(3, weight=0)  # Separator
         self.grid_rowconfigure(4, weight=6)  # CommandPannel
         self.grid_columnconfigure(0, weight=1)
+        
+        self.bluetooth_status_pannel = BluetoothStatusPannel(self)
+        self.bluetooth_command_pannel = BluetoothCommandPannel(self, shared_dict_values, shared_dict_order)
+        
+        self.motor_status_pannel = MotorsStatusPannel(self)
+        self.motor_command_pannel = MotorsCommandPannel(self)
+
+        self.wifi_status_pannel = WifiStatusPannel(self)
+        self.wifi_command_pannel = WifiCommandPannel(self, shared_dict_values)
 
         # Initialize with Wifi panneaux
-        self.update_pannels("Bluetooth")
+        self.status = "Bluetooth"
+        self.update_pannels(self.status)
 
     def update_pannels(self, status):
         # Update StatusPannel and CommandPannel based on status
         self.status_pannel.grid_forget()
         self.command_pannel.grid_forget()
 
+        self.status = status
+
         if status == "Bluetooth":
-            self.status_pannel = BluetoothStatusPannel(self)
-            self.command_pannel = BluetoothCommandPannel(self)
+            self.status_pannel = self.bluetooth_status_pannel
+            self.command_pannel = self.bluetooth_command_pannel
         elif status == "Motors":
-            self.status_pannel = MotorsStatusPannel(self)
-            self.command_pannel = MotorsCommandPannel(self)
+            self.status_pannel = self.motor_status_pannel
+            self.command_pannel = self.motor_command_pannel
         elif status == "Wifi":
-            self.status_pannel = WifiStatusPannel(self)
-            self.command_pannel = WifiCommandPannel(self)
+            self.status_pannel = self.wifi_status_pannel
+            self.command_pannel = self.wifi_command_pannel
 
         self.status_pannel.grid(row=2, column=0, sticky="nsew")
         self.command_pannel.grid(row=4, column=0, sticky="nsew")
 
+    def loop(self, shared_dict):
+        if self.status == "Bluetooth" or self.status == "Wifi":
+            self.status_pannel.loop(shared_dict)
         
 # Example usage
 if __name__ == "__main__":

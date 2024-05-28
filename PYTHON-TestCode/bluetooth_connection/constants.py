@@ -28,4 +28,7 @@ UUIDS = {
     ORDER_WORKING_UUID : "Order Working"
 }
 
+BLUETOOTH_CONNECTION = "BLUETOOTH_CONNECTION"
+BLUETOOTH_UPDATE = "BLUETOOTH_UPDATE"
+
 #//************************************************************

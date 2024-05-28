@@ -2,7 +2,6 @@ import time
 import tkinter as tk
 import cv2
 from PIL import Image, ImageTk
-from data.variable import running
 
 class CameraWidget(tk.Canvas):
     def __init__(self, parent, *args, **kwargs):
@@ -23,7 +22,6 @@ class CameraWidget(tk.Canvas):
         self.width = self.parent.winfo_width()
         self.height = self.parent.winfo_height()
 
-        self.update_video()
 
     def turn_off(self):
         self.show_video = False

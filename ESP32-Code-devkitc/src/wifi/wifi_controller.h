@@ -13,17 +13,19 @@ class WiFiController {
         }
 
         bool connect(const char* ssid, const char* password) {
-            WiFi.begin(ssid, password);
-            int retries = 0;
-            while (retries < maxRetries)
-            {
-                if (isConnected()) {
-                    return true;
+            if (ssid != "" && password != "")
+                WiFi.begin(ssid, password);
+                int retries = 0;
+                while (retries < maxRetries)
+                {
+                    if (isConnected()) {
+                        return true;
+                    }
+                    delay(1000);
+                    retries += 1;
                 }
                 delay(1000);
-                retries += 1;
-            }
-            return false;
+                return false;
         }
         
 

@@ -16,7 +16,7 @@ class BLEClient:
     async def connect_by_address(self, device_address):
         self.client = BleakClient(device_address)
         await self.client.connect()
-        return self.client.is_connected()
+        return self.is_connected()
     
     async def connect_by_name(self, device_name):
         devices = await self.scan()
@@ -24,7 +24,7 @@ class BLEClient:
             if device.name == device_name:
                 self.client = BleakClient(device.address)
                 await self.client.connect()
-                return self.client.is_connected
+                return self.is_connected()
 
     async def disconnect(self):
         await self.client.disconnect()
@@ -69,7 +69,7 @@ class BLEClient:
 
     def is_connected(self):
         if self.client is not None:
-            return self.client.is_connected()
+            return self.client.is_connected
         return False
 
 # Example usage

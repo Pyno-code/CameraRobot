@@ -10,3 +10,5 @@ class MotorsCommandPannel(tk.Frame):
         command_label = tk.Label(self, text="Command Panel (Motors)")
         command_label.pack()
         # Add more widgets as needed
+
+    

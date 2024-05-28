@@ -10,3 +10,7 @@ class MotorsStatusPannel(tk.Frame):
         status_label = tk.Label(self, text="Status Panel (Motors)")
         status_label.pack()
         # Add more widgets as needed
+
+    def loop(self):
+        # Update the values of the labels
+        pass
