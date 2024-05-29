@@ -22,6 +22,7 @@ class BluetoothController {
         //************************************************************
         #define SSID_UUID "02456daf-2ff7-431b-812b-772f0eb7b2b2"
         #define PASSWORD_UUID "ebac488a-1cd1-4bdf-b6a6-9fc78fe75772"
+        #define ADDRESS_MAC_UUID "5522e482-aa39-435b-97ce-dedb2fc8a6dd"
 
         #define IP_UUID "02f211b0-37e2-4dcf-a57c-93d6c26bb79f"
         #define PORT_UUID "0f2824b0-0572-4dae-b615-360d0064f176"
@@ -32,6 +33,9 @@ class BluetoothController {
 
         #define ORDER_WIFI_CONNECTION_UUID "60a8d493-3283-404b-8a99-7523a7f8dbc6"
         #define ORDER_WORKING_UUID "40265fbb-1001-4675-b93f-1e2c618e066b"
+        #define ORDER_TCP_CONNECTION_UUID "933ec3ff-2db7-446a-b825-6e3d6ae6a886"
+
+
         //************************************************************
         
     public:
@@ -59,6 +63,7 @@ class BluetoothController {
             Characteristic passwordCharacteristic = *createCharacteristic(PASSWORD_UUID);
             Characteristic ipCharacteristic = *createCharacteristic(IP_UUID);
             Characteristic portCharacteristic = *createCharacteristic(PORT_UUID);
+            Characteristic addressMacCharacteristic = *createCharacteristic(ADDRESS_MAC_UUID);
 
             Characteristic workingStatusCharacteristic = *createCharacteristic(WORKING_STATUS_UUID);
             Characteristic wifiStatusCharacteristic = *createCharacteristic(WIFI_STATUS_UUID);
@@ -66,10 +71,12 @@ class BluetoothController {
 
             Characteristic orderConnectionWifiCharacteristic = *createCharacteristic(ORDER_WIFI_CONNECTION_UUID);
             Characteristic orderWorkingCharacteristic = *createCharacteristic(ORDER_WORKING_UUID);
+            Characteristic orderConnectionTcpCharacteristic = *createCharacteristic(ORDER_TCP_CONNECTION_UUID);
             //************************************************************
             pServerBluetooth->startServer();
             logger::print(logger::INFO, "Bluetooth Controller initialized");
             logger::print(logger::INFO, "Fetching devices ...");
+
             
         }
 
@@ -104,6 +111,13 @@ class BluetoothController {
                     String orderWifiConnection = (characteristics)[ORDER_WIFI_CONNECTION_UUID]->getMessage();
                     variable::orderWifiConnection = stringToBool(orderWifiConnection);
                     logger::print(logger::INFO, "Order wifi connection : " + orderWifiConnection);
+                }
+
+                // ordre de connexion tcp
+                if ((characteristics)[ORDER_TCP_CONNECTION_UUID]->hasValue()) {
+                    String orderTcpConnection = (characteristics)[ORDER_TCP_CONNECTION_UUID]->getMessage();
+                    variable::orderTCPConnection = stringToBool(orderTcpConnection);
+                    logger::print(logger::INFO, "Order tcp connection : " + orderTcpConnection);
                 }
                 
 
@@ -154,6 +168,12 @@ class BluetoothController {
                 if (variable::port != (characteristics)[PORT_UUID]->getCurrentValue().toInt()) {
                     (characteristics)[PORT_UUID]->setValue(String(variable::port));
                     logger::print(logger::INFO, "Port : " + String(variable::port));
+                }
+
+                // écriture de l'adresse mac
+                if (variable::macAddress != (characteristics)[ADDRESS_MAC_UUID]->getCurrentValue()) {
+                    (characteristics)[ADDRESS_MAC_UUID]->setValue(variable::macAddress);
+                    logger::print(logger::INFO, "Mac address : " + variable::macAddress);
                 }
             }
         }

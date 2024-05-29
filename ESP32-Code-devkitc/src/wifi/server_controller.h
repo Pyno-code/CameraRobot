@@ -21,4 +21,12 @@ class ServerController {
                 Serial.println(server->getMessage());
             }
         }
+
+        ~ServerController() {
+            delete server;
+        }
+
+        TcpServer* getServer() {
+            return server;
+        }
 };

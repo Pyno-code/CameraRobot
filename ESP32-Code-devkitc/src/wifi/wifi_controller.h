@@ -37,6 +37,10 @@ class WiFiController {
             return WiFi.localIP();
         }
 
+        String getMacAddress() {
+            return WiFi.macAddress();
+        }
+
         bool isConnected() {
             return WiFi.status() == WL_CONNECTED;
         }

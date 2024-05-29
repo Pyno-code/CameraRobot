@@ -43,7 +43,7 @@ class TcpServer {
     private:
         TcpClient client;
         bool isRunning = false;
-            int port;
+        int port;
 
         public:
             WiFiServer server;
@@ -60,8 +60,6 @@ class TcpServer {
             Serial.print(WiFi.localIP());
             Serial.print(":");
             Serial.println(port);
-
-
         }
 
         void listen() {
@@ -120,5 +118,9 @@ class TcpServer {
 
         TcpClient getClient() {
             return client;
+        }
+
+        bool isConnected() {
+            return isRunning;
         }
 };

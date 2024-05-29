@@ -22,6 +22,7 @@ bool variable::serverTcpConnectedStatus = false;
 
 bool variable::orderWorking = false;
 bool variable::orderWifiConnection = false;
+bool variable::orderTCPConnection = false;
 
 bool variable::wifiInitialized = false;
 bool variable::serverTcpInitialized = false;
@@ -31,6 +32,7 @@ String variable::password;
 
 String variable::ip;
 int variable::port = 5000;
+String variable::macAddress = "00:00:00:00:00:00";
 
 
 
@@ -55,7 +57,6 @@ void loop() {
 
 
     // ordre de marcher
-    delay(500);
     variable::workingStatus = true;
 
     if (variable::orderWifiConnection) {
@@ -83,19 +84,41 @@ void loop() {
         if (connected) {
           // si le wifi est connecté
           logger::print(logger::INFO, "Wifi connected");
+          variable::macAddress = wifiController->getMacAddress();
           variable::wifiConnectedStatus = true;
           variable::ip = wifiController->getLocalIP().toString();
         }
       } else {
 
-        // si le wifi est connecté
-        if (!variable::serverTcpInitialized) {
-          // si le serveur tcp n'est pas initialisé
-          serverController = new ServerController(variable::port);
-          variable::serverTcpInitialized = true;
-          variable::serverTcpConnectedStatus = false;
-          logger::print(logger::INFO, "Server tcp initialized");
+        if (variable::orderTCPConnection) {
+          // si j'ai l'ordre de me connecter au serveur tcp
+
+          if (!variable::serverTcpInitialized) {
+            // si le serveur tcp n'est pas initialisé
+            serverController = new ServerController(variable::port);
+            variable::serverTcpInitialized = true;
+            variable::serverTcpConnectedStatus = false;
+            logger::print(logger::INFO, "Server tcp initialized");
+          } else {
+            serverController->loop();
+          }
+        } else {
+          // si je n'ai pas l'ordre de me connecter au serveur tcp
+
+          if (variable::serverTcpInitialized) {
+            // si le serveur tcp est initialisé
+
+            if (serverController->getServer()->isConnected()) {
+              serverController->getServer()->stopServer();
+              variable::serverTcpConnectedStatus = false;
+              variable::serverTcpInitialized = false;
+              logger::print(logger::INFO, "Server tcp disconnected");
+            }
+
+
+          }
         }
+
       }    
     } else {
       if (variable::wifiInitialized) {

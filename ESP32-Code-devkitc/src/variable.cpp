@@ -9,6 +9,7 @@ namespace variable {
     
     extern bool orderWorking;
     extern bool orderWifiConnection;
+    extern bool orderTCPConnection;
     
     extern bool wifiInitialized;
     extern bool serverTcpInitialized;
@@ -18,5 +19,7 @@ namespace variable {
 
     extern String ip;
     extern int port;
+
+    extern String macAddress;
 }
 
