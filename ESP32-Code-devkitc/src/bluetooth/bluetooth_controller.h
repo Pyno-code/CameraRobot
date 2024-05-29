@@ -60,18 +60,29 @@ class BluetoothController {
 
             //************************************************************
             Characteristic ssidCharacteristic = *createCharacteristic(SSID_UUID);
+            ssidCharacteristic.setValue("");
             Characteristic passwordCharacteristic = *createCharacteristic(PASSWORD_UUID);
+            passwordCharacteristic.setValue("");
             Characteristic ipCharacteristic = *createCharacteristic(IP_UUID);
+            ipCharacteristic.setValue("255.255.255.255");
             Characteristic portCharacteristic = *createCharacteristic(PORT_UUID);
+            portCharacteristic.setValue("5000");
             Characteristic addressMacCharacteristic = *createCharacteristic(ADDRESS_MAC_UUID);
+            addressMacCharacteristic.setValue("XX:XX:XX:XX:XX:XX");
 
             Characteristic workingStatusCharacteristic = *createCharacteristic(WORKING_STATUS_UUID);
+            workingStatusCharacteristic.setValue("false");
             Characteristic wifiStatusCharacteristic = *createCharacteristic(WIFI_STATUS_UUID);
+            wifiStatusCharacteristic.setValue("false");
             Characteristic serverTcpStatusCharacteristic = *createCharacteristic(SERVER_TCP_STATUS_UUID);
+            serverTcpStatusCharacteristic.setValue("false");
 
             Characteristic orderConnectionWifiCharacteristic = *createCharacteristic(ORDER_WIFI_CONNECTION_UUID);
+            orderConnectionWifiCharacteristic.setValue("false");
             Characteristic orderWorkingCharacteristic = *createCharacteristic(ORDER_WORKING_UUID);
+            orderWorkingCharacteristic.setValue("false");
             Characteristic orderConnectionTcpCharacteristic = *createCharacteristic(ORDER_TCP_CONNECTION_UUID);
+            orderConnectionTcpCharacteristic.setValue("false");
             //************************************************************
             pServerBluetooth->startServer();
             logger::print(logger::INFO, "Bluetooth Controller initialized");

@@ -44,7 +44,7 @@ class ServerBluetooth {
             pServerCallback = new ServerCallback();
             pServer->setCallbacks(pServerCallback);
 
-            pService = pServer->createService(SERVICE_UUID, 32);
+            pService = pServer->createService(SERVICE_UUID, 64);
         };
 
         void startAdvertising() {

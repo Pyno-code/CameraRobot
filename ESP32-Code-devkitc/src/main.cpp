@@ -97,7 +97,7 @@ void loop() {
             // si le serveur tcp n'est pas initialisé
             serverController = new ServerController(variable::port);
             variable::serverTcpInitialized = true;
-            variable::serverTcpConnectedStatus = false;
+            variable::serverTcpConnectedStatus = true;
             logger::print(logger::INFO, "Server tcp initialized");
           } else {
             serverController->loop();
@@ -142,5 +142,6 @@ void loop() {
 
     variable::orderWifiConnection = false;
     variable::orderWorking = false;
+    variable::orderTCPConnection = false;
   }
 }

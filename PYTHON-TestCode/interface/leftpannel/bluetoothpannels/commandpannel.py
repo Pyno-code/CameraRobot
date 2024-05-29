@@ -22,8 +22,7 @@ class BluetoothCommandPannel(tk.Frame):
         self.label_order_working = tk.Label(self, text="ACTIVATE ESP32 : ")
         self.label_order_working.grid(row=3, column=0, padx=20, pady=5)
 
-        self.label_order_wifi_connection = tk.Label(self, text="ORDER WIFI CONNECTION : ")
-        self.label_order_wifi_connection.grid(row=4, column=0, padx=20, pady=5)
+
 
         # Add toggle switch
         toggle_switch_bluetooth_connection = ToggleSwitch(self)
@@ -37,10 +36,6 @@ class BluetoothCommandPannel(tk.Frame):
         toggle_switch_order_working = ToggleSwitch(self)
         toggle_switch_order_working.func = lambda: shared_dict_values.update({ORDER_WORKING_UUID: "true" if toggle_switch_order_working.get_state() else "false"})
         toggle_switch_order_working.grid(row=3, column=1, padx=30, pady=5, sticky='nsew')
-
-        toggle_switch_order_wifi_connection = ToggleSwitch(self)
-        toggle_switch_order_wifi_connection.func = lambda: shared_dict_values.update({ORDER_WIFI_CONNECTION_UUID: "true" if toggle_switch_order_wifi_connection.get_state() else "false"})
-        toggle_switch_order_wifi_connection.grid(row=4, column=1, padx=30, pady=5, sticky="nsew")
 
         self.columnconfigure(0, weight=1)
         self.columnconfigure(1, weight=1)

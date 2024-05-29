@@ -60,12 +60,12 @@ class TcpServer {
             Serial.print(WiFi.localIP());
             Serial.print(":");
             Serial.println(port);
+            logger::print(logger::INFO, "Listening for clients... (in future loop)");
         }
 
         void listen() {
             if (!client.connected()) {
                 delay(1000);
-                logger::print(logger::INFO, "Listening for clients...");
                 TcpClient newClient(server.available());
                 if (newClient) {
                     client = newClient;

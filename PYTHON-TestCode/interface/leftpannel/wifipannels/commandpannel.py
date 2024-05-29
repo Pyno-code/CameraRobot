@@ -14,35 +14,40 @@ class WifiCommandPannel(tk.Frame):
         command_label = tk.Label(self, text="Command Panel (WiFi)")
         command_label.grid(row=0, column=0, columnspan=2, padx=20, pady=5)
         # Add more widgets as needed
-
-        self.label_order_working_tcp = tk.Label(self, text="ORDER TCP INITIALISATION : ")
-        self.label_order_working_tcp.grid(row=1, column=0, padx=20, pady=5)
-
-        self.label_order_tcp_connection = tk.Label(self, text="TCP CONNECTION : ")
-        self.label_order_tcp_connection.grid(row=2, column=0, padx=20, pady=5)
+    
 
         self.label_ssid_connection = tk.Label(self, text="SSID : ")
-        self.label_ssid_connection.grid(row=3, column=0, padx=20, pady=5)
+        self.label_ssid_connection.grid(row=1, column=0, padx=20, pady=5)
 
         self.label_ssid_connection = tk.Label(self, text="PASSWORD : ")
-        self.label_ssid_connection.grid(row=4, column=0, padx=20, pady=5)
+        self.label_ssid_connection.grid(row=2, column=0, padx=20, pady=5)
+
+        self.label_order_wifi_connection = tk.Label(self, text="ORDER WIFI CONNECTION : ")
+        self.label_order_wifi_connection.grid(row=3, column=0, padx=20, pady=5)
+
+        self.label_order_working_tcp = tk.Label(self, text="ORDER TCP CONNECTION : ")
+        self.label_order_working_tcp.grid(row=4, column=0, padx=20, pady=5)
+
 
         # Add toggle switch
-        
-        toggle_switch_order_working_tcp = ToggleSwitch(self)
-        # toggle_switch_order_working_tcp.func = lambda: shared_dict[]
-        toggle_switch_order_working_tcp.grid(row=1, column=1, padx=30, pady=5, sticky='nsew')
 
-        button_order_tcp_connection = tk.Button(self, text="CONNECT")
-        button_order_tcp_connection.grid(row=2, column=1, padx=30, pady=5, sticky="nsew")
+
 
         entry_ssid = tk.Entry(self)
-        entry_ssid.grid(row=3, column=1, padx=30, pady=5, sticky="nsew")
+        entry_ssid.grid(row=1, column=1, padx=30, pady=5, sticky="nsew")
         entry_ssid.bind("<Return>", lambda x: shared_dict.update({SSID_UUID: entry_ssid.get()}))
 
         entry_password = tk.Entry(self, show="*")
-        entry_password.grid(row=4, column=1, padx=30, pady=5, sticky="nsew")
+        entry_password.grid(row=2, column=1, padx=30, pady=5, sticky="nsew")
         entry_password.bind("<Return>", lambda x: shared_dict.update({PASSWORD_UUID: entry_password.get()}))
+
+        toggle_switch_order_wifi_connection = ToggleSwitch(self)
+        toggle_switch_order_wifi_connection.func = lambda: shared_dict.update({ORDER_WIFI_CONNECTION_UUID: "true" if toggle_switch_order_wifi_connection.get_state() else "false"})
+        toggle_switch_order_wifi_connection.grid(row=3, column=1, padx=30, pady=5, sticky="nsew")
+
+        toggle_switch_order_tcp_connection = ToggleSwitch(self)
+        toggle_switch_order_tcp_connection.func = lambda: shared_dict.update({ORDER_TCP_CONNECTION_UUID: "true" if toggle_switch_order_tcp_connection.get_state() else "false"})
+        toggle_switch_order_tcp_connection.grid(row=4, column=1, padx=30, pady=5, sticky='nsew')
 
         self.columnconfigure(0, weight=1)
         self.columnconfigure(1, weight=1)

@@ -2,6 +2,7 @@ import asyncio
 import time
 from bleak import BleakClient
 from bleak import BleakScanner
+import bleak
 from bleak.exc import BleakError
 from tabulate import tabulate
 from bluetooth_connection.constants import *
@@ -23,18 +24,29 @@ class BLEClient:
         for device in devices:
             if device.name == device_name:
                 self.client = BleakClient(device.address)
-                await self.client.connect()
+                try:
+                    await self.client.connect()
+                except bleak.exc.BleakDeviceNotFoundError:
+                    pass
                 return self.is_connected()
 
     async def disconnect(self):
         await self.client.disconnect()
 
     async def read_characteristic(self, characteristic_uuid):
-        value = await self.client.read_gatt_char(characteristic_uuid)
-        return value.decode("utf-8")
+        try:
+            value = await self.client.read_gatt_char(characteristic_uuid)
+            return value.decode("utf-8")
+        except Exception as e:
+            self.client.disconnect()
+            raise e
 
     async def write_characteristic(self, characteristic_uuid, data):
-        await self.client.write_gatt_char(characteristic_uuid, bytearray(data, "utf-8"))
+        try:
+            await self.client.write_gatt_char(characteristic_uuid, bytearray(data, "utf-8"))
+        except Exception as e:
+            self.client.disconnect()
+            raise e
 
 
     async def scan(self, debug=False):

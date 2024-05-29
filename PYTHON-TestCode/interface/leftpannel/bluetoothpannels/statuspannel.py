@@ -18,9 +18,6 @@ class BluetoothStatusPannel(tk.Frame):
         label_working = tk.Label(self, text="WORKING : ")
         label_working.grid(row=2, column=0, padx=20, pady=5)
 
-        label_wifi = tk.Label(self, text="WIFI CONNECTED : ")
-        label_wifi.grid(row=3, column=0, padx=20, pady=5)
-
         
 
 
@@ -31,17 +28,12 @@ class BluetoothStatusPannel(tk.Frame):
         self.label_working_value = tk.Label(self, text="false")
         self.label_working_value.grid(row=2, column=1, padx=20, pady=5)
 
-        self.label_wifi_value = tk.Label(self, text="false")
-        self.label_wifi_value.grid(row=3, column=1, padx=20, pady=5)
-
-        
-
 
         self.columnconfigure(0, weight=1)
         self.columnconfigure(1, weight=1)
 
 
     def loop(self, shared_dict):
-        self.label_wifi_value.config(text=shared_dict[WIFI_STATUS_UUID])
         self.label_working_value.config(text=shared_dict[WORKING_STATUS_UUID])
+        self.label_bluetooth_value.config(text=shared_dict["BLUETOOTH_CONNECTED"])
         # self.label_bluetooth_value.config(text=shared_dict[UUID])

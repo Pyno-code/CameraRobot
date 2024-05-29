@@ -26,11 +26,12 @@ class WifiStatusPannel(tk.Frame):
         self.label_password = tk.Label(self, text="PASSWORD : ")
         self.label_password.grid(row=5, column=0, padx=20, pady=5)
 
-        self.label_server_tcp = tk.Label(self, text="SERVER TCP ACTIVATED :")
-        self.label_server_tcp.grid(row=6, column=0, padx=20, pady=5)
 
-        self.label_server_connection_tcp = tk.Label(self, text="TCP CONNECTED :")
-        self.label_server_connection_tcp.grid(row=7, column=0, padx=20, pady=5)
+        self.label_wifi = tk.Label(self, text="WIFI CONNECTED :")
+        self.label_wifi.grid(row=6, column=0, padx=20, pady=5)
+
+        self.label_server_tcp = tk.Label(self, text="SERVER TCP ACTIVATED :")
+        self.label_server_tcp.grid(row=7, column=0, padx=20, pady=5)
 
 
         # values
@@ -52,11 +53,12 @@ class WifiStatusPannel(tk.Frame):
         self.password_button.bind("<Button>", self.button_pressed)
         self.password_button.bind("<ButtonRelease>", self.button_unpressed)
 
-        self.label_server_tcp_value = tk.Label(self, text="false")
-        self.label_server_tcp_value.grid(row=6, column=1, padx=20, pady=5)
+        self.label_wifi_value = tk.Label(self, text="false")
+        self.label_wifi_value.grid(row=6, column=1, padx=20, pady=5)
 
-        self.label_server_connection_tcp_value = tk.Label(self, text="false")
-        self.label_server_connection_tcp_value.grid(row=7, column=1, padx=20, pady=5)
+        self.label_server_tcp_value = tk.Label(self, text="false")
+        self.label_server_tcp_value.grid(row=7, column=1, padx=20, pady=5)
+
 
         self.columnconfigure(0, weight=1)
         self.columnconfigure(1, weight=1)
@@ -70,10 +72,12 @@ class WifiStatusPannel(tk.Frame):
     
     def loop(self, shared_dict):
         self.shared_dict = shared_dict
-
+        
+        self.label_mac_value.config(text=shared_dict[ADDRESS_MAC_UUID])
         self.label_ip_value.config(text=shared_dict[IP_UUID])
         self.label_port_value.config(text=shared_dict[PORT_UUID])
         self.label_ssid_value.config(text=shared_dict[SSID_UUID])
+        self.label_wifi_value.config(text=shared_dict[WIFI_STATUS_UUID])
         self.label_server_tcp_value.config(text=shared_dict[SERVER_TCP_STATUS_UUID])
-        self.label_server_connection_tcp_value.config(text=shared_dict[WIFI_STATUS_UUID])
+        
 
