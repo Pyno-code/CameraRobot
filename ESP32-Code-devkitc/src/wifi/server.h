@@ -100,9 +100,7 @@ class TcpServer {
         }
 
         void stopServer() {
-            
             kickClient();
-
             server.stop();
             isRunning = false;
             logger::print(logger::INFO, "Server stopped");

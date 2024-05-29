@@ -86,7 +86,7 @@ class BluetoothController {
             //************************************************************
             pServerBluetooth->startServer();
             logger::print(logger::INFO, "Bluetooth Controller initialized");
-            logger::print(logger::INFO, "Fetching devices ...");
+            logger::print(logger::INFO, "Fetching devices ... (in future loop)");
 
             
         }
