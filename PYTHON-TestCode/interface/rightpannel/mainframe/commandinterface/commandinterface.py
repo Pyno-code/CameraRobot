@@ -1,3 +1,4 @@
+from multiprocessing import Queue
 import queue
 import tkinter as tk
 from tkinter import ttk
@@ -14,8 +15,11 @@ class CommandInterface(tk.Frame):
     DEBUG = "DEBUG"
     SUCCESS = "SUCCESS"
 
-    def __init__(self, parent, *args, **kwargs):
+    def __init__(self, parent, queue_recv_tcp_message: Queue, queue_send_tcp_message: Queue, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
+
+        self.queue_recv_tcp_message = queue_recv_tcp_message
+        self.queue_send_tcp_message = queue_send_tcp_message
 
         # Créer le widget de texte défilant pour afficher les résultats
         self.text_area = ScrolledText(self, wrap=tk.WORD)
@@ -47,8 +51,8 @@ class CommandInterface(tk.Frame):
         command = self.entry.get()
         # Effacer le contenu de l'entrée de texte
         self.entry.delete(0, tk.END)
-        # Afficher la commande dans le widget de texte défilant
-        self.queue_logger.put((self.INFO, f">>> {command}"))
+        # Envoyer la commande à la file d'attente pour être traitée par le contrôleur
+        self.queue_send_tcp_message.put(command)
 
     def log(self, queue_logger : queue.Queue):
         self.queue_logger = queue_logger

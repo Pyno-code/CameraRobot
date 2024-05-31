@@ -56,7 +56,7 @@ class Client:
 
     def send_(self, data: str, connected) -> None:
         try:
-            self.socket.send(data.encode('utf-8'))
+            self.socket.sendall(data.encode('utf-8'))
             if self.debug:
                 print('Message envoyé au serveur')
         except ConnectionResetError:
@@ -101,6 +101,10 @@ class Client:
         return None
 
     def is_connected(self):
+        try:
+            self.socket.getpeername()
+        except socket.error:
+            return False
         return self.connected.get()
 
     def get_address_server(self) -> tuple[str, int]:

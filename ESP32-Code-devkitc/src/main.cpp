@@ -1,4 +1,5 @@
 #include <controller.cpp>
+#include "logger.h"
 
 bool variable::workingStatus = false;
 bool variable::wifiConnectedStatus = false;
@@ -17,7 +18,7 @@ String variable::password;
 
 String variable::ip;
 int variable::port = 5000;
-String variable::macAddress = "00:00:00:00:00:00";
+String variable::macAddress = "XX:XX:XX:XX:XX:XX";
 
 
 Controller* controller;
@@ -29,5 +30,11 @@ void setup() {
 }
 
 void loop() {
+  unsigned long start_time = millis();
   controller->loop();
+  unsigned long time_elasped = millis() - start_time;
+  if (time_elasped > 50) {
+    logger::print(logger::DEBUG, "Loop time : ", false);
+    Serial.println(String(millis() - start_time));
+  }
 }

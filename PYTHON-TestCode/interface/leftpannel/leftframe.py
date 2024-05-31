@@ -19,15 +19,13 @@ class LeftFrame(tk.Frame):
         self.separator1 = ttk.Separator(self, orient='horizontal')
         self.separator1.grid(row=1, column=0, sticky="ew", pady=1)
 
-        # Create the StatusPannel and CommandPannel initially with Wifi
-        self.status_pannel = WifiStatusPannel(self)
-        self.status_pannel.grid(row=2, column=0, sticky="nsew")
 
         self.separator2 = ttk.Separator(self, orient='horizontal')
         self.separator2.grid(row=3, column=0, sticky="ew", pady=1)
 
-        self.command_pannel = WifiCommandPannel(self, shared_dict_values)
-        self.command_pannel.grid(row=4, column=0, sticky="nsew")
+
+        self.status_pannel = tk.Frame(self)
+        self.command_pannel = tk.Frame(self)
 
         # Configure grid weights for responsive resizing
         self.grid_rowconfigure(0, weight=1)  # Selector
@@ -44,7 +42,7 @@ class LeftFrame(tk.Frame):
         self.motor_command_pannel = MotorsCommandPannel(self)
 
         self.wifi_status_pannel = WifiStatusPannel(self)
-        self.wifi_command_pannel = WifiCommandPannel(self, shared_dict_values)
+        self.wifi_command_pannel = WifiCommandPannel(self, shared_dict_values, shared_dict_order)
 
         # Initialize with Wifi panneaux
         self.status = "Bluetooth"

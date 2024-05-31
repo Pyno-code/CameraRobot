@@ -33,6 +33,9 @@ class WifiStatusPannel(tk.Frame):
         self.label_server_tcp = tk.Label(self, text="SERVER TCP ACTIVATED :")
         self.label_server_tcp.grid(row=7, column=0, padx=20, pady=5)
 
+        self.label_connection_server_tcp = tk.Label(self, text="CONNECTED TO THE TCP SERVER :")
+        self.label_connection_server_tcp.grid(row=8, column=0, padx=20, pady=5)
+
 
         # values
         self.label_mac_value = tk.Label(self, text="XX:XX:XX:XX:XX:XX")
@@ -59,6 +62,9 @@ class WifiStatusPannel(tk.Frame):
         self.label_server_tcp_value = tk.Label(self, text="false")
         self.label_server_tcp_value.grid(row=7, column=1, padx=20, pady=5)
 
+        self.label_connection_server_tcp_value = tk.Label(self, text="false")
+        self.label_connection_server_tcp_value.grid(row=8, column=1, padx=20, pady=5)
+
 
         self.columnconfigure(0, weight=1)
         self.columnconfigure(1, weight=1)
@@ -79,5 +85,6 @@ class WifiStatusPannel(tk.Frame):
         self.label_ssid_value.config(text=shared_dict[SSID_UUID])
         self.label_wifi_value.config(text=shared_dict[WIFI_STATUS_UUID])
         self.label_server_tcp_value.config(text=shared_dict[SERVER_TCP_STATUS_UUID])
+        self.label_connection_server_tcp_value.config(text=shared_dict["TCP_CONNECTED"])
         
 

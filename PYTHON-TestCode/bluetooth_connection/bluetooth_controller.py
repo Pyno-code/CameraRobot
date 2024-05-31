@@ -1,5 +1,6 @@
 
 import asyncio
+import time
 from bluetooth_connection.client import BLEClient
 from bluetooth_connection.constants import *
 from multiprocessing import Value, Queue
@@ -25,7 +26,6 @@ class BluetoothController:
     async def loop(self):
         while self.running.value:
             try:
-
                 if self.order_dict["BLUETOOTH_CONNECTION"] == "true":
                     if not self.client.is_connected():
                         self.queue_logger.put(('INFO', "Trying to connect ..."))
@@ -37,7 +37,6 @@ class BluetoothController:
                             self.queue_logger.put(('SUCCESS', "Connected to the bluetooth"))
                         else:
                             self.queue_logger.put(('WARNING', "Failed to connect to the bluetooth"))
-                            await asyncio.sleep(1)
                     else:
                         if self.order_dict["BLUETOOTH_UPDATE"] == "true":
                             # self.queue_logger.put(('DEBUG', f"Working value : {self.shared_dict[WORKING_STATUS_UUID]}"))
@@ -53,7 +52,6 @@ class BluetoothController:
                             
                             # à faire apres la lecture des valeurs, tres important !
                             await self.update_ble_values(current_shared_dict)
-                            await asyncio.sleep(1)
                             
                 else:
                     if self.client.is_connected():
@@ -62,7 +60,7 @@ class BluetoothController:
 
                     self.shared_dict[IP_UUID] = ""
                     self.shared_dict[PORT_UUID] = ""
-                    self.shared_dict[ADDRESS_MAC_UUID] = ""
+                    self.shared_dict[ADDRESS_MAC_UUID] = "XX:XX:XX:XX:XX:XX"
                     self.shared_dict[WIFI_STATUS_UUID] = "false"
                     self.shared_dict[WORKING_STATUS_UUID] = "false"
                     self.shared_dict[SERVER_TCP_STATUS_UUID] = "false"
@@ -76,11 +74,12 @@ class BluetoothController:
                     self.shared_dict["BLUETOOTH_CONNECTED"] = "false"
 
 
-                    await asyncio.sleep(3)
+                    await asyncio.sleep(0.5)
             except Exception as e:
                 traceback_str = traceback.format_exc()
                 self.queue_logger.put(('ERROR',  traceback_str))
                 print(traceback_str)
+            
 
 
 

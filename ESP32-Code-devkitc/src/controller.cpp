@@ -31,6 +31,7 @@ class Controller {
         void loop() {
             
             bleController->loop();
+            
 
             if (variable::bluetoothConnectedStatus && variable::orderWorking) {
 
@@ -55,7 +56,7 @@ class Controller {
                                 initializeTCPServer();
                             } else {
                                 // si le serveur tcp est initialisé et que j'ai l'ordre de me connecter
-                                serverController->loop();
+                                serverController->loop();  
                             }
 
                         } else {
@@ -93,8 +94,13 @@ class Controller {
 
         void orderWifiConnection() {
             // si le wifi n'est pas connecté
+            logger::print(logger::INFO, "Trying to connect to the Wifi : ");
+            Serial.print("  SSID : ");
+            Serial.println(variable::ssid);
+            Serial.print("  PASSWORD : ");
+            Serial.println(variable::password);
             bool connected = wifiController->connect(variable::ssid.c_str(), variable::password.c_str());
-        
+            
             if (connected) {
                 // si le wifi est connecté
                 logger::print(logger::INFO, "Wifi connected");

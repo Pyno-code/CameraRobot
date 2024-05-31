@@ -3,7 +3,7 @@ from interface.rightpannel.toolbar.toolbar import Toolbar
 from interface.rightpannel.mainframe.mainframe import MainFrame
 
 class RightFrame(tk.Frame):
-    def __init__(self, parent, *args, **kwargs):
+    def __init__(self, parent, queue_recv_tcp_message, queue_send_tcp_message, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
         self.config(bg="white")  # Just to differentiate visually
 
@@ -12,7 +12,7 @@ class RightFrame(tk.Frame):
         self.toolbar.pack(side=tk.TOP, fill=tk.X)
 
         # Créer le mainframe
-        self.main_frame = MainFrame(self)
+        self.main_frame = MainFrame(self, queue_recv_tcp_message, queue_send_tcp_message)
         self.main_frame.pack(fill=tk.BOTH, expand=True)
 
         # Lier les boutons de la toolbar aux méthodes de changement de vue

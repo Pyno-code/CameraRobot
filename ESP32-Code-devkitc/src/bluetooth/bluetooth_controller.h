@@ -104,7 +104,8 @@ class BluetoothController {
                     variable::bluetoothConnectedStatus = true;
                 }
 
-            } else {
+            }
+            if (pServerBluetooth->isDeviceConnected()) {
                 
                 
                 // lire les valeurs et les ordres ici

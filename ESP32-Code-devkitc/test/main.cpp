@@ -54,7 +54,6 @@ void loop() {
 
 
     // ordre de marcher
-    delay(500);
     variable::workingStatus = true;
 
     if (variable::orderWifiConnection) {

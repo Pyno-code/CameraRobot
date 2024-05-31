@@ -69,6 +69,8 @@ class TcpServer {
                 TcpClient newClient(server.available());
                 if (newClient) {
                     client = newClient;
+                    logger::print(logger::INFO, "New client connected : ", false);
+                    Serial.println(client.remoteIP());
                 }
             }
         }
@@ -77,7 +79,7 @@ class TcpServer {
             client.stop();
         }
 
-        void readMessage() {
+        void readMessage() {   
             if (client.available()) {
                 String message = client.readStringUntil('$');
                 client.addMessage(message);

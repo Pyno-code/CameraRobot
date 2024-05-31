@@ -46,60 +46,60 @@ public:
 };
 
 class Characteristic {
-private:
-    std::string uuid;
-    bool notify;
-    bool write;
-    bool read;
-    BLECharacteristic* pCharacteristic;
-    BLE2902* pBLE2902;
-    BLEService* pService;
-    CharacteristicCallBack* callback;
+    private:
+        std::string uuid;
+        bool notify;
+        bool write;
+        bool read;
+        BLECharacteristic* pCharacteristic;
+        BLE2902* pBLE2902;
+        BLEService* pService;
+        CharacteristicCallBack* callback;
 
 
 
-public:
+    public:
 
-    CharacteristicCallBack* getCallback() {
-        return callback;
-    };
-    
-    Characteristic(BLEServer* pServer, const std::string& uuidService_, const std::string& uuid_, const bool notify_ = true, const bool write_ = true, const bool read_ = true)
-        : uuid(uuid_), notify(notify_), write(write_), read(read_) {
-
-        pService = pServer->getServiceByUUID(uuidService_);
-        pCharacteristic = pService->createCharacteristic(
-            uuid,
-            BLECharacteristic::PROPERTY_READ |
-            BLECharacteristic::PROPERTY_WRITE |
-            BLECharacteristic::PROPERTY_NOTIFY
-        );
-
-
-        pBLE2902 = new BLE2902();
-        pBLE2902->setNotifications(true);
-        pCharacteristic->addDescriptor(pBLE2902);
+        CharacteristicCallBack* getCallback() {
+            return callback;
+        };
         
-        callback = new CharacteristicCallBack();
-        pCharacteristic->setCallbacks(callback);
-        pCharacteristic->setValue("");
+        Characteristic(BLEServer* pServer, const std::string& uuidService_, const std::string& uuid_, const bool notify_ = true, const bool write_ = true, const bool read_ = true)
+            : uuid(uuid_), notify(notify_), write(write_), read(read_) {
 
-    }
+            pService = pServer->getServiceByUUID(uuidService_);
+            pCharacteristic = pService->createCharacteristic(
+                uuid,
+                BLECharacteristic::PROPERTY_READ |
+                BLECharacteristic::PROPERTY_WRITE |
+                BLECharacteristic::PROPERTY_NOTIFY
+            );
 
-    bool hasValue() {
-        return callback->hasValue();
-    }
 
-    String getMessage() {
-        return callback->popMessage();
-    }
+            pBLE2902 = new BLE2902();
+            pBLE2902->setNotifications(true);
+            pCharacteristic->addDescriptor(pBLE2902);
+            
+            callback = new CharacteristicCallBack();
+            pCharacteristic->setCallbacks(callback);
+            pCharacteristic->setValue("");
 
-    void setValue(const String value) {
-        callback->clearQueue();
-        pCharacteristic->setValue(std::string(value.c_str()));
-    }
+        }
 
-    String getCurrentValue() {
-        return String(pCharacteristic->getValue().c_str());
-    }
+        bool hasValue() {
+            return callback->hasValue();
+        }
+
+        String getMessage() {
+            return callback->popMessage();
+        }
+
+        void setValue(const String value) {
+            callback->clearQueue();
+            pCharacteristic->setValue(std::string(value.c_str()));
+        }
+
+        String getCurrentValue() {
+            return String(pCharacteristic->getValue().c_str());
+        }
 };
