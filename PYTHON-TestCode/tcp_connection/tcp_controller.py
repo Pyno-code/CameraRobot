@@ -3,15 +3,22 @@
 from queue import Queue
 import time
 import traceback
-from bluetooth_connection.constants import IP_UUID, PORT_UUID
+from bluetooth_connection.constants import IP_UUID, PORT_UUID, SERVER_TCP_STATUS_UUID
 from tcp_connection.client import Client
+from tcp_connection.protocol import Protocol
 
 
 class TCPController:
-    def __init__(self, running, queue_logger: Queue, queue_send_tcp_message: Queue, queue_recv_tcp_message: Queue, order_dict: dict, dict_values: dict) -> None:
+    def __init__(self, running, queue_logger: Queue, queue_send_tcp_message: Queue, queue_recv_tcp_message: Queue, queue_send_command: Queue, order_dict: dict, dict_values: dict) -> None:
+        
+        self.protocol = Protocol(queue_logger, queue_send_command, queue_send_tcp_message, queue_recv_tcp_message)
+        
         self.queue_logger = queue_logger
         self.queue_send_tcp_message = queue_send_tcp_message
         self.queue_recv_tcp_message = queue_recv_tcp_message
+
+        self.queue_send_command = queue_send_command
+
         self.order_dict = order_dict
         self.dict_values = dict_values
         self.running = running
@@ -27,8 +34,7 @@ class TCPController:
         time.sleep(1)
         while self.running.value:
             try:
-                # TODO: RECONNEXION AU SERVER APRES DECONNEXION
-                if self.order_dict["TCP_CONNECTION"] == "true":
+                if self.order_dict["TCP_CONNECTION"] == "true" and self.dict_values[SERVER_TCP_STATUS_UUID] == "true":
                     if not self.is_connected():
                         self.queue_logger.put(('INFO', "Trying to connect to the tcp server"))
                         self.queue_logger.put(('INFO', f"Server at {self.dict_values[IP_UUID]}:{self.dict_values[PORT_UUID]}"))
@@ -44,28 +50,15 @@ class TCPController:
                             self.queue_logger.put(('WARNING', "Failed to connect to the tcp server"))
                     else:
                         if self.order_dict["TCP_UPDATE"] == "true":
-                            
+                            self.protocol.loop()
                             self.client.receive()
                             if self.client.has_message():
                                 message = self.client.get_message()
-                                list_args_message = message.split("|")
-                                if list_args_message[0] == "ping":
-                                    self.queue_logger.put(('INFO', f"Ping : {(round(time.time(), 5) - eval(list_args_message[1]))/2}" ))
-                                else:
-                                    self.queue_logger.put(('INFO', f"Received message : {message}"))
-                                    self.queue_recv_tcp_message.put(message)
-                            
+                                self.queue_recv_tcp_message.put(message)
                             for i in range(self.queue_send_tcp_message.qsize()):
                                 message = self.queue_send_tcp_message.get()
-                                if message == "ping":
-                                    self.start_ping = time.time()
-                                    self.client.send(f"ping|{str(round(time.time(), 5))}$")
-                                else:
-                                    self.client.send(message+"$")
-                                self.queue_logger.put(('INFO', f"Sent message : {message}"))
+                                self.client.send(bytes(message))
                                 self.queue_send_tcp_message.task_done()
-                            
-
                 else:           
                     if self.is_connected():
                         self.client.close()

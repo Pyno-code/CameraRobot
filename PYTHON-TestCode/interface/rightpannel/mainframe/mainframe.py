@@ -3,14 +3,14 @@ from interface.rightpannel.mainframe.camera.camera import CameraWidget
 from interface.rightpannel.mainframe.commandinterface.commandinterface import CommandInterface
 
 class MainFrame(tk.Frame):
-    def __init__(self, parent, queue_recv_tcp_message, queue_send_tcp_message, *args, **kwargs):
+    def __init__(self, parent, queue_recv_tcp_message, queue_send_command, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
 
         # Créer le widget de la caméra
         self.camera_widget = CameraWidget(self)
 
         # Créer l'interface de commande
-        self.command_interface = CommandInterface(self, queue_recv_tcp_message, queue_send_tcp_message)
+        self.command_interface = CommandInterface(self, queue_recv_tcp_message, queue_send_command)
 
         # Afficher la caméra par défaut
         self.show_command_interface()

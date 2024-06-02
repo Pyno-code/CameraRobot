@@ -49,6 +49,12 @@ class BluetoothController:
                                     self.queue_logger.put(('SUCCESS', "Connected to the wifi"))
                                 elif self.shared_dict[WIFI_STATUS_UUID] == "false":
                                     self.queue_logger.put(('WARNING', "Disconnected from the wifi"))
+
+                            if SERVER_TCP_STATUS_UUID in read_uuids_updated:
+                                if self.shared_dict[SERVER_TCP_STATUS_UUID] == "true":
+                                    self.queue_logger.put(('SUCCESS', "The tcp server is initialized"))
+                                elif self.shared_dict[SERVER_TCP_STATUS_UUID] == "false":
+                                    self.queue_logger.put(('WARNING', "The tcp server is not initialized"))
                             
                             # à faire apres la lecture des valeurs, tres important !
                             await self.update_ble_values(current_shared_dict)

@@ -52,9 +52,11 @@ class ManagerController:
         self.queue_send_tcp_message = self.manager.Queue()
         self.queue_recv_tcp_message = self.manager.Queue()
 
+        self.queue_send_command = self.manager.Queue()
+
         self.bluetooth_controller = BluetoothController(self.running, self.dict_values, self.order_dict, self.queue_logger)
-        self.interface_controller = App(self.running, self.dict_values, self.order_dict, self.queue_logger, self.queue_recv_tcp_message, self.queue_send_tcp_message)
-        self.tcp_controller = TCPController(self.running, self.queue_logger, self.queue_send_tcp_message, self.queue_recv_tcp_message, self.order_dict, self.dict_values)
+        self.interface_controller = App(self.running, self.dict_values, self.order_dict, self.queue_logger, self.queue_recv_tcp_message, self.queue_send_tcp_message, self.queue_send_command)
+        self.tcp_controller = TCPController(self.running, self.queue_logger, self.queue_send_tcp_message, self.queue_recv_tcp_message, self.queue_send_command, self.order_dict, self.dict_values)
 
         self.bluetooth_process = Process(target=self.bluetooth_controller.start)
         self.tcp_process = Process(target=self.tcp_controller.start)
@@ -64,15 +66,22 @@ class ManagerController:
         self.running.value = False
 
     def launch(self):
+        print('Launching')
         self.bluetooth_process.start()
+        print("Bluetooth process started")
         self.tcp_process.start()
+        print("TCP process started")
         self.interface_controller.start()
+        print("Interface started")
 
 
     def join(self):
+        print('Joining')
         self.bluetooth_process.join()
+        print("Bluetooth process joined")
         self.tcp_process.join()
+        print("TCP process joined")
         self.manager.shutdown()
+        print("Manager shutdown")
         self.manager.join()
-        
-        
+        print("Manager joined")

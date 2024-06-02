@@ -9,7 +9,7 @@ import asyncio
 
 
 class App(tk.Tk):
-    def __init__(self, running, bluetooth_dict_values, bluetooth_order_dict, queue_logger, queue_recv_tcp_message, queue_send_tcp_message, *args, **kwargs):
+    def __init__(self, running, bluetooth_dict_values, bluetooth_order_dict, queue_logger, queue_recv_tcp_message, queue_send_tcp_message, queue_send_command, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
         # setup
@@ -24,6 +24,7 @@ class App(tk.Tk):
         self.bluetooth_order_dict = bluetooth_order_dict
         self.queue_recv_tcp_message = queue_recv_tcp_message
         self.queue_send_tcp_message = queue_send_tcp_message
+        self.queue_send_command = queue_send_command
         self.queue_logger = queue_logger
 
         self.title("CameraRobot")
@@ -37,7 +38,7 @@ class App(tk.Tk):
 
         # Create frames
         self.left_frame = LeftFrame(self, self.bluetooth_dict_values, self.bluetooth_order_dict)
-        self.right_frame = RightFrame(self, self.queue_recv_tcp_message, self.queue_send_tcp_message)
+        self.right_frame = RightFrame(self, self.queue_recv_tcp_message, self.queue_send_command)
 
         # Create a separator
         self.separator = ttk.Separator(self, orient='vertical')

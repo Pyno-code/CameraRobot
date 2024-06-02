@@ -11,7 +11,7 @@ class Client:
         
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket_initialized = False
-        self.socket.settimeout(10)
+        self.socket.settimeout(3)
 
         self.message_queue: Queue = Queue()
 
@@ -48,15 +48,15 @@ class Client:
             self.connect(address)
 
     
-    def send(self, data: str) -> None:
+    def send(self, data: bytes) -> None:
         if self.is_connected():
             send_process = Thread(target=self.send_, args=(data, self.connected))
             send_process.start()
         
 
-    def send_(self, data: str, connected) -> None:
+    def send_(self, data: bytes, connected) -> None:
         try:
-            self.socket.sendall(data.encode('utf-8'))
+            self.socket.sendall(data)
             if self.debug:
                 print('Message envoyé au serveur')
         except ConnectionResetError:
