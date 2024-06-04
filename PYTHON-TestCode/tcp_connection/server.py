@@ -2,6 +2,7 @@ import socket
 from threading import Thread
 import time
 from multiprocessing import Manager, Queue
+from test import *
 
 
 class Server:
@@ -44,13 +45,13 @@ class Server:
     def read_(self, queue: Queue) -> None:
         if self.client is not None:
             try:
-                message = self.client.recv(1024).decode('utf-8')
+                message = self.client.recv(1024)
                 if message != '':
                     queue.put(message)
                 else:
                     raise socket.error
                 if self.debug:
-                    print('Message received : *'+ message + '*')
+                    print('Message received : *'+ message.decode('utf-8') + '*')
             except socket.error:
                 print('ConnectionError', 'Connexion perdue avec le client')
                 self.client.close()
@@ -61,9 +62,9 @@ class Server:
             self.read_process = Thread(target=self.read_, args=(self.message_queue,))
             self.read_process.start()
 
-    def send_(self, data: str) -> None:
+    def send_(self, data: bytes) -> None:
         try:
-            self.client.send(data.encode('utf-8'))
+            self.client.send(data)
             if self.debug:
                 print('Message sent to client')
         except socket.error:
@@ -72,12 +73,12 @@ class Server:
             self.client.close()
             self.client = None
 
-    def send(self, data: str) -> None:
+    def send(self, data: bytes) -> None:
         if self.client is not None:
             send_process = Thread(target=self.send_, args=(data,))
             send_process.start()
     
-    def get_message(self) -> str:
+    def get_message(self) -> bytes:
         if not self.message_queue.empty():
             return self.message_queue.get()
         return None
@@ -114,8 +115,10 @@ if __name__ == '__main__':
                 server.read()
                 if server.has_message():
                     message = server.get_message()
-                    server.send('Message received')
-                    if message.startswith('exit'):
+                    server.send('Message received'.encode('utf-8'))
+                    message = int.from_bytes(message, 'big')
+                    print('Message received :', message)
+                    if message == 0b0000000000000000:
                         raise KeyboardInterrupt
 
                 

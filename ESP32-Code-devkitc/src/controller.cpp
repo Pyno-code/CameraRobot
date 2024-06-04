@@ -4,6 +4,7 @@
 #include <HardwareSerial.h>
 #include <variable.cpp>
 #include "logger.h"
+#include "motor/motor_controller.h"
 
 
 class Controller {
@@ -11,11 +12,17 @@ class Controller {
         BluetoothController* bleController;
         WiFiController* wifiController;
         ServerController* serverController;
+        MotorController* motorController;
+
+        std::vector<std::array<float, 10>> *commandQueue;
+        
 
         const std::string DEVICE_NAME = "ESP32";
     public:
 
-        Controller() {}
+        Controller() {
+            commandQueue = new std::vector<std::array<float, 10>>();
+        }
 
         void setup() {
             Serial.begin(115200);
@@ -24,6 +31,8 @@ class Controller {
             logger::print(logger::INFO, "Hey working !");
 
             bleController = new BluetoothController(DEVICE_NAME);
+            // motorController = new MotorController(commandQueue);
+            motorController = new MotorController(commandQueue);
 
             // initialiser les objets utilisant le wifi dans la loop ....
         }
@@ -31,6 +40,9 @@ class Controller {
         void loop() {
             
             bleController->loop();
+            // motorController->loop(commandQueue);
+            motorController->loop();
+
             
 
             if (variable::bluetoothConnectedStatus && variable::orderWorking) {
@@ -111,7 +123,7 @@ class Controller {
         }
 
         void initializeTCPServer() {
-            serverController = new ServerController(variable::port);
+            serverController = new ServerController(variable::port, commandQueue);
             variable::serverTcpInitialized = true;
             variable::serverTcpConnectedStatus = true;
             logger::print(logger::INFO, "Server tcp initialized");

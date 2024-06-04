@@ -6,8 +6,9 @@ from bluetooth_connection.constants import *
 from multiprocessing import Value, Queue
 import traceback
 
+
+
 class BluetoothController:
-    
     
 
     def __init__(self, running,  shared_dict, order_dict, queue_logger: Queue) -> None:
@@ -71,8 +72,8 @@ class BluetoothController:
                     self.shared_dict[WORKING_STATUS_UUID] = "false"
                     self.shared_dict[SERVER_TCP_STATUS_UUID] = "false"
                     
-                    self.shared_dict[SSID_UUID] = ""
-                    self.shared_dict[PASSWORD_UUID] = ""
+                    self.shared_dict[SSID_UUID] = "test"
+                    self.shared_dict[PASSWORD_UUID] = "12345678"
                     self.shared_dict[ORDER_WIFI_CONNECTION_UUID] = "false"
                     self.shared_dict[ORDER_WORKING_UUID] = "false"
                     self.shared_dict[ORDER_TCP_CONNECTION_UUID] = "false"
@@ -83,8 +84,17 @@ class BluetoothController:
                     await asyncio.sleep(0.5)
             except Exception as e:
                 traceback_str = traceback.format_exc()
-                self.queue_logger.put(('ERROR',  traceback_str))
+                self.queue_logger.put(('ERROR', "An unexpected error occurred,\nResetting the bluetooth connection"))
                 print(traceback_str)
+        
+        if self.client.is_connected():
+            self.shared_dict[ORDER_WIFI_CONNECTION_UUID] = "false"
+            self.shared_dict[ORDER_WORKING_UUID] = "false"
+            self.shared_dict[ORDER_TCP_CONNECTION_UUID] = "false"
+
+            await self.update_ble_values(self.shared_dict.copy())
+            await self.client.disconnect()
+
             
 
 

@@ -34,9 +34,12 @@ class ManagerController:
         
         self.dict_values[ORDER_WIFI_CONNECTION_UUID] = "false"
         self.dict_values[ORDER_WORKING_UUID] = "false"
+        self.dict_values[ORDER_TCP_CONNECTION_UUID] = "false"
+
+        self.dict_values["TCP_CONNECTED"] = "false"
+
 
         # --------------------------------
-        self.dict_values["TCP_CONNECTED"] = "false"
         
 
         self.order_dict = self.manager.dict()

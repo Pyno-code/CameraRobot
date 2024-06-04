@@ -1,42 +1,53 @@
 #include <WiFi.h>
 #include <WiFiClient.h>
 #include <WiFiServer.h>
-#include <Vector.h>
 #include <LinkedList.h>
 #include "logger.h"
-
-
 
 class TcpClient : public WiFiClient {
 
     private:
-        LinkedList<String> messageQueue = LinkedList<String>();
+        LinkedList<byte*> messageQueue;
+        LinkedList<int> messageLengths;
 
     public:
         TcpClient() : WiFiClient() {}
         TcpClient(const WiFiClient& client) : WiFiClient(client) {}
 
-        void addMessage(const String& message) {
-            messageQueue.add(message);
+        ~TcpClient() {
+            clearMessages();
         }
 
-        String popMessage() {
+        void addMessage(byte* message, int length) {
+            byte* messageCopy = new byte[length];
+            memcpy(messageCopy, message, length);
+            messageQueue.add(messageCopy);
+            messageLengths.add(length);
+        }
+
+        byte* popMessage(int &length) {
             if (hasMessage()) {
-                String message = messageQueue.get(0);
+                byte* message = messageQueue.get(0);
+                length = messageLengths.get(0);
                 messageQueue.remove(0);
+                messageLengths.remove(0);
                 return message;
             }
-            return "";
+            length = 0;
+            return nullptr;
         }
 
         void clearMessages() {
-            messageQueue.clear();
+            while (hasMessage()) {
+                int length;
+                byte* message = popMessage(length);
+                delete[] message;
+            }
         }
 
         bool hasMessage() {
             return (messageQueue.size() != 0);
         }
-
 };
 
 class TcpServer {
@@ -45,18 +56,15 @@ class TcpServer {
         bool isRunning = false;
         int port;
 
-        public:
-            WiFiServer server;
-            TcpServer(int port_) : port(port_) {
-                server = WiFiServer(port);
-            }
-
+    public:
+        WiFiServer server;
+        TcpServer(int port_) : port(port_), server(port_) {}
 
         void begin() {
             server.begin();
             isRunning = true;
             server.setNoDelay(true);
-            logger::print(logger::INFO, "Server started at : ", false);
+            logger::print(logger::INFO, "Server started at: ", false);
             Serial.print(WiFi.localIP());
             Serial.print(":");
             Serial.println(port);
@@ -69,7 +77,7 @@ class TcpServer {
                 TcpClient newClient(server.available());
                 if (newClient) {
                     client = newClient;
-                    logger::print(logger::INFO, "New client connected : ", false);
+                    logger::print(logger::INFO, "New client connected: ", false);
                     Serial.println(client.remoteIP());
                 }
             }
@@ -80,14 +88,19 @@ class TcpServer {
         }
 
         void readMessage() {   
+            const int bufferSize = 26;
+            byte buffer[bufferSize];
+
             if (client.available()) {
-                String message = client.readStringUntil('$');
-                client.addMessage(message);
+                int bytesRead = client.readBytes(buffer, bufferSize);
+                if (bytesRead > 0) {
+                    client.addMessage(buffer, bytesRead);
+                }
             }
         }
 
-        String getMessage() {
-            return client.popMessage();
+        byte* getMessage(int& length) {
+            return client.popMessage(length);
         }
 
         bool hasMessage() {

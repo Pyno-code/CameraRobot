@@ -2,6 +2,7 @@ import socket
 from threading import Thread
 import time
 from multiprocessing import Manager, Queue
+from test import *
 
 
 class Client:
@@ -84,7 +85,7 @@ class Client:
             if message != '':
                 message_queue.put(message)
             else:
-                raise socket.error
+                print('ConnectionError', 'Connexion perdue avec le serveur')
         except socket.timeout:
             pass
         except socket.error:
@@ -95,7 +96,7 @@ class Client:
     def has_message(self) -> bool:
         return not self.message_queue.empty()
 
-    def get_message(self) -> str:
+    def get_message(self) -> bytes:
         if self.has_message():
             return self.message_queue.get()
         return None
@@ -123,7 +124,8 @@ class Client:
 
 def sending(client: Client):
     try:
-        message = input('Message à envoyer : ')
+        message = input('Message à envoyer : ').encode('utf-8')
+        message = 0b0001000000000000.to_bytes(2, 'big')
         client.send(message)
         if message == 'exit':
             raise KeyboardInterrupt
@@ -151,7 +153,7 @@ if __name__ == '__main__':
                     sending_thread.start()
             else:
                 time.sleep(1)
-                client.connect(('192.168.196.108', 5000))
+                client.connect(('192.168.11.108', 5000))
         except KeyboardInterrupt:
             running = False
         

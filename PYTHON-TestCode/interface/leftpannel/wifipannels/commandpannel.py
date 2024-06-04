@@ -41,11 +41,11 @@ class WifiCommandPannel(tk.Frame):
 
         entry_ssid = tk.Entry(self)
         entry_ssid.grid(row=1, column=1, padx=30, pady=5, sticky="nsew")
-        entry_ssid.bind("<Return>", lambda x: value_dict.update({SSID_UUID: entry_ssid.get()}))
+        entry_ssid.bind("<Return>", lambda x: [value_dict.update({SSID_UUID: entry_ssid.get()}), entry_ssid.delete(0, 'end')])
 
         entry_password = tk.Entry(self, show="*")
         entry_password.grid(row=2, column=1, padx=30, pady=5, sticky="nsew")
-        entry_password.bind("<Return>", lambda x: value_dict.update({PASSWORD_UUID: entry_password.get()}))
+        entry_password.bind("<Return>", lambda x: [value_dict.update({PASSWORD_UUID: entry_password.get()}), entry_password.delete(0, 'end')])
 
         toggle_switch_order_wifi_connection = ToggleSwitch(self)
         toggle_switch_order_wifi_connection.func = lambda: value_dict.update({ORDER_WIFI_CONNECTION_UUID: "true" if toggle_switch_order_wifi_connection.get_state() else "false"})
@@ -67,8 +67,4 @@ class WifiCommandPannel(tk.Frame):
         self.columnconfigure(1, weight=1)
     
 
-    def return_entry_ssid(self, event):
-        return self.entry_ssid.get()
-    
-    
 

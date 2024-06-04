@@ -1,5 +1,7 @@
 
+import base64
 from multiprocessing import Queue
+import struct
 
 
 STATUS = 0
@@ -47,6 +49,7 @@ LIST_ARGS = [
     {
         "ANGLE": ANGLE,
         "SPEED": SPEED,
+        "_": 0
     },
 
     {
@@ -73,8 +76,7 @@ class Protocol:
         list_args = message.split(" ")
         return list_args
     
-    def convert_command_to_list_int(self, message: str) -> list:
-        list_args = self.parse_command(message)
+    def convert_command_to_list_int(self, list_args) -> list:
         list_int = [0, 0, 0, 0]
         for i, arg in enumerate(list_args):
             list_int[i] = LIST_ARGS[i][arg]
@@ -87,6 +89,9 @@ class Protocol:
                 if arg == value:
                     message += key + " "
         return message
+    
+    def string_to_binary(self, s):
+        return ' '.join(format(ord(char), '08b') for char in s)
     
     def convert_list_int_to_bytes(self, list_int: list) -> int:
         result = 0
@@ -107,18 +112,58 @@ class Protocol:
         formatted_string = ' '.join([binary_string[i:i+4] for i in range(0, len(binary_string), 4)])
         return formatted_string
     
+    def float_to_binary64(self, value):
+        return struct.pack('<d', value)
+    
+    def convert_list_float64_to_bytes(self, float_list: list) -> bytes:
+        return [self.float_to_binary64(number) for number in float_list]
+    
+    def convert_list_float32_to_bytes(self, float_list: list) -> bytes:
+        return [struct.pack('<f', number) for number in float_list] # little-endian base 32
+    
     def loop(self):
         for i in range(self.queue_send_command.qsize()):
             message = self.queue_send_command.get()
+            self.queue_logger.put(('INFO', f"Command : {message}"))
+            list_args = self.parse_command(message)
 
-            list_int = self.convert_command_to_list_int(message)
-            byte = self.convert_list_int_to_bytes(list_int)
+            float_list = []
+            for arg in list_args:
+                try:
+                    float_value = float(arg)
+                    float_list.append(float_value)
+                except ValueError:
+                    pass
+            str_list = [arg for arg in list_args if arg.isalpha()]
+            str_list = [arg.upper() for arg in str_list]
+            float_list.extend([0.0] * (6 - len(float_list)))
+
+            list_int = self.convert_command_to_list_int(str_list)
+            byte_command = self.convert_list_int_to_bytes(list_int)
+            list_byte_arg = self.convert_list_float32_to_bytes(float_list)
+
+            byte_args = b''.join(list_byte_arg)
+
+            message_bytes = byte_command.to_bytes(2, 'big') + byte_args
+            self.queue_logger.put(('DEBUG', f"LIST_COMMAND: {str_list}"))
+            self.queue_logger.put(('DEBUG', f"LIST_FLOAT: {float_list}"))
+            self.queue_logger.put(('DEBUG', f"COMMAND: {byte_command.to_bytes(2, 'big')}"))
+
+
+            # self.queue_logger.put(('DEBUG', f"ARGS: {byte_args}"))
+            # self.queue_logger.put(('DEBUG', f"MESSAGE: {message_bytes}"))
+            # self.queue_logger.put(('DEBUG', f"Command sended: {message}"))
+
+            # for e in list_byte_arg:
+            #     unpacked_value = struct.unpack('<f', e)[0]
+            #     binary_string = f'{unpacked_value}'
+            #     self.queue_logger.put(('DEBUG', f'packed_value: {binary_string}'))
+
             
-            byte_str = self.convert_bytes_to_bytes_str(byte)
-            self.queue_logger.put(('INFO', f"Command sended: {message}"))
-            self.queue_logger.put(('INFO', f"Bytes sended: {byte_str}"))
-
-            self.queue_send_tcp_message.put(bytes(byte))
+            byte_str = self.convert_bytes_to_bytes_str(byte_command)
+            # self.queue_logger.put(('INFO', f"Command sended: {message}"))
+            # self.queue_logger.put(('INFO', f"Bytes sended: {byte_str}"))
+            self.queue_send_tcp_message.put(message_bytes)
         
         for i in range(self.queue_recv_tcp_message.qsize()):
             byte = self.queue_recv_tcp_message.get()

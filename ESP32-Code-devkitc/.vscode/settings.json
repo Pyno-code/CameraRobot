@@ -1,3 +1,4 @@
 {
-    "cmake.sourceDirectory": "C:/Users/pynop/Documents/prog/CameraRobot/ESP32-Code-devkitc/.pio/libdeps/esp32-s3-devkitc-1/Unity"
+    "cmake.sourceDirectory": "C:/Users/pynop/Documents/prog/CameraRobot/ESP32-Code-devkitc/.pio/libdeps/esp32-s3-devkitc-1/Unity",
+    "C_Cpp.errorSquiggles": "disabled"
 }

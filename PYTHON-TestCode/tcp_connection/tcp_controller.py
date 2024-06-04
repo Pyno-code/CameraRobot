@@ -31,16 +31,14 @@ class TCPController:
         self.loop()
 
     def loop(self):
-        time.sleep(1)
         while self.running.value:
             try:
-                if self.order_dict["TCP_CONNECTION"] == "true" and self.dict_values[SERVER_TCP_STATUS_UUID] == "true":
+                if self.order_dict["TCP_CONNECTION"] == "true" and self.dict_values[SERVER_TCP_STATUS_UUID] == "true" and self.dict_values[IP_UUID] != "" and self.dict_values[PORT_UUID] != "":
                     if not self.is_connected():
                         self.queue_logger.put(('INFO', "Trying to connect to the tcp server"))
                         self.queue_logger.put(('INFO', f"Server at {self.dict_values[IP_UUID]}:{self.dict_values[PORT_UUID]}"))
                         self.client = Client()
                         self.client.connect((str(self.dict_values[IP_UUID]), int(self.dict_values[PORT_UUID])))
-                        time.sleep(3)
                         self.dict_values["TCP_CONNECTED"] = "true" if self.is_connected() else "false"
 
                         if self.is_connected():
@@ -57,7 +55,7 @@ class TCPController:
                                 self.queue_recv_tcp_message.put(message)
                             for i in range(self.queue_send_tcp_message.qsize()):
                                 message = self.queue_send_tcp_message.get()
-                                self.client.send(bytes(message))
+                                self.client.send(message)
                                 self.queue_send_tcp_message.task_done()
                 else:           
                     if self.is_connected():
