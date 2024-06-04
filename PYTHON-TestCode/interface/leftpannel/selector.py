@@ -2,8 +2,8 @@ import tkinter as tk
 from tkinter import ttk
 
 class Selector(tk.Frame):
-    def __init__(self, parent, *args, **kwargs):
-        super().__init__(parent, *args, **kwargs)
+    def __init__(self, parent,  *args,   **kwargs):
+        super().__init__(parent)
 
         self.status = "Bluetooth"
 
@@ -38,9 +38,11 @@ class Selector(tk.Frame):
         button_frame.grid_rowconfigure(1, weight=1)  # Separator
         button_frame.grid_rowconfigure(2, weight=1)  # Label
 
+        self.update_label("Bluetooth")
+
     def update_status(self, status):
         self.status = status
-        self.update_label(f"{status}")
+        self.update_label(f"                                           {status}                                           ")
         self.parent.update_pannels(status)
 
     def update_label(self, text):

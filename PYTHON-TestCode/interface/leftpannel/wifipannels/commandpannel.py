@@ -10,6 +10,7 @@ class WifiCommandPannel(tk.Frame):
 
         self.config(bg="white")  # Just to differentiate visually
 
+
         # Add widgets for command panel
         command_label = tk.Label(self, text="Command Panel (WiFi)")
         command_label.grid(row=0, column=0, columnspan=2, padx=20, pady=5)

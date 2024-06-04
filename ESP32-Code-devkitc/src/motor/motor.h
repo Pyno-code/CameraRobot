@@ -38,7 +38,11 @@ class Motor {
 
         void moveAngle(float angle) {
             int step = int(angle * steps_per_revolution / 360);
-            stepper->move(step);
+            Serial.print("Moving to angle: ");
+            // erreur de type ici
+            Serial.println(step);
+            // stepper->move(step);
+            Serial.print("End of moveAngle");
         }
 
         void moveTo(int position) {

@@ -23,6 +23,10 @@ class ToggleSwitch(tk.Button):
     
     def get_state(self):
         return self.state
+    
+    def set_state(self, activate: bool):
+        if activate != self.state:
+            self.toggle(None)
             
 
 
