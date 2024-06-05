@@ -99,7 +99,7 @@ class BluetoothController {
                 
                 pServerBluetooth->startAdvertising();
 
-                delay(2000);
+                delay(500);
                 if (pServerBluetooth->isDeviceConnected()) {
                     variable::bluetoothConnectedStatus = true;
                 }
