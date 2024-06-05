@@ -128,13 +128,14 @@ class Protocol:
             list_args = self.parse_command(message)
 
             float_list = []
+            
             for arg in list_args:
                 try:
                     float_value = float(arg)
                     float_list.append(float_value)
                 except ValueError:
                     pass
-            str_list = [arg for arg in list_args if arg.isalpha()]
+            str_list = [arg for arg in list_args if arg.isalpha() or arg == "*" or arg == "_"]
             str_list = [arg.upper() for arg in str_list]
             float_list.extend([0.0] * (6 - len(float_list)))
 
@@ -146,8 +147,8 @@ class Protocol:
 
             message_bytes = byte_command.to_bytes(2, 'big') + byte_args
             self.queue_logger.put(('DEBUG', f"LIST_COMMAND: {str_list}"))
+            self.queue_logger.put(('DEBUG', f"LIST_INT: {list_int}"))
             self.queue_logger.put(('DEBUG', f"LIST_FLOAT: {float_list}"))
-            self.queue_logger.put(('DEBUG', f"COMMAND: {byte_command.to_bytes(2, 'big')}"))
 
 
             # self.queue_logger.put(('DEBUG', f"ARGS: {byte_args}"))

@@ -29,6 +29,8 @@ class CommandInterface(tk.Frame):
         self.entry = ttk.Entry(self)
         self.entry.grid(row=1, column=0, sticky="nsew", padx=15, pady=10)
         self.entry.bind("<Return>", self.execute_command)
+        self.entry.bind("<KeyPress-Up>", self.up_command)
+        self.entry.bind("<KeyPress-Down>", self.down_command)
 
         # Désactiver l'édition dans le widget de texte défilant
         self.text_area.configure(state="disabled")
@@ -37,6 +39,9 @@ class CommandInterface(tk.Frame):
         self.grid_columnconfigure(0, weight=1)
 
         self.configure_log_tags()
+
+        self.list_command = [""]
+        self.command_selector = 0
 
     def configure_log_tags(self):
         self.text_area.tag_configure(self.FATAL, foreground="red")
@@ -50,9 +55,18 @@ class CommandInterface(tk.Frame):
         # Récupérer la commande saisie par l'utilisateur
         command = self.entry.get()
         # Effacer le contenu de l'entrée de texte
-        self.entry.delete(0, tk.END)
-        # Envoyer la commande à la file d'attente pour être traitée par le contrôleur
-        self.queue_send_command.put(command)
+        if command != "":
+            if command == "cls":
+                self.list_command = [""]
+                self.text_area.configure(state="normal")
+                self.text_area.delete(1.0, tk.END)
+                self.text_area.configure(state="disabled")
+            else:
+                self.list_command.append(command)
+                self.entry.delete(0, tk.END)
+                # Envoyer la commande à la file d'attente pour être traitée par le contrôleur
+                self.queue_send_command.put(command)
+                self.command_selector = len(self.list_command)
 
     def log(self, queue_logger : queue.Queue):
         self.queue_logger = queue_logger
@@ -63,6 +77,21 @@ class CommandInterface(tk.Frame):
                 self.text_area.insert(tk.END, f"[{level}] -- {message}\n", level)
                 self.text_area.see(tk.END)
                 self.text_area.configure(state="disabled")
+    
+    def up_command(self, event):
+        self.command_selector -= 1
+        self.update_entry()
+    
+    def down_command(self, event):
+        self.command_selector += 1
+        self.update_entry()
+
+    
+    def update_entry(self):
+        if len(self.list_command) > 0:
+            self.entry.delete(0, tk.END)
+            self.entry.insert(0, self.list_command[self.command_selector % len(self.list_command)])
+
 
 # Exemple d'utilisation
 if __name__ == "__main__":
