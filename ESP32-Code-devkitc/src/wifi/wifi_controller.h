@@ -24,7 +24,6 @@ class WiFiController {
                     delay(1000);
                     retries += 1;
                 }
-                delay(1000);
                 return false;
         }
         

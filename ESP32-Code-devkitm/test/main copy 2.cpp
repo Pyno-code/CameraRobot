@@ -24,27 +24,27 @@ FastAccelStepperEngine engine = FastAccelStepperEngine();
 Motor *motor_base;
 
 
-// void singleClick() {
-//   if (!stepper_base->isRunning()) {
-//     if (stepper_base->getCurrentPosition() == 5000) {
-//       stepper_base->moveTo(0);
-//     } else {
-//       stepper_base->moveTo(5000);
-//     }
-//   }
-// }
+void singleClick() {
+  if (!stepper_base->isRunning()) {
+    if (stepper_base->getCurrentPosition() == 5000) {
+      stepper_base->moveTo(0);
+    } else {
+      stepper_base->moveTo(5000);
+    }
+  }
+}
 
-// void doubleClick() {
-//   dir = -dir;
-//   if (running) {
-//     stepper_base->stopMove();
-//     if (dir == 1) {
-//       stepper_base->runForward();
-//     } else {
-//       stepper_base->runBackward();
-//     }
-//   }
-// }
+void doubleClick() {
+  dir = -dir;
+  if (running) {
+    stepper_base->stopMove();
+    if (dir == 1) {
+      stepper_base->runForward();
+    } else {
+      stepper_base->runBackward();
+    }
+  }
+}
 
 void setup() {
   Serial.begin(115200);

@@ -64,7 +64,7 @@ void setup() {
   engine.init();
   stepper_base = engine.stepperConnectToPin(STEP_PIN_BASE); // STEP pin connected to STEP_PIN_BASE
   stepper_base->setDirectionPin(DIR_PIN_BASE);
-  stepper_base->setSpeedInHz(100); // Set speed in Hz
+  stepper_base->setSpeedInHz(50); // Set speed in Hz
   stepper_base->setAcceleration(10000); // Set acceleration in steps/s^2
 
 }

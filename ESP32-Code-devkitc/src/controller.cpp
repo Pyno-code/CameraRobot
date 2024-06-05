@@ -27,7 +27,6 @@ class Controller {
         void setup() {
             Serial.begin(115200);
 
-            delay(5000); // attendre que le moniteur série se connecte
             logger::print(logger::INFO, "Hey working !");
 
             bleController = new BluetoothController(DEVICE_NAME);

@@ -28,7 +28,7 @@ class ServerController {
                 byte* message = server->getMessage(length);
                 // logger::print(logger::INFO, "Message received: ");
                 // logger::print(logger::INFO, "length: ", false);
-                Serial.println(length);
+                // Serial.println(length);
                 // Extract the last 16 bits from the message
                 if (message && length == 2 + 24) { // 2 bytes for command + 24 bytes for 3 base64 encoded floats
                     // Process the first 16 bits (2 bytes)
