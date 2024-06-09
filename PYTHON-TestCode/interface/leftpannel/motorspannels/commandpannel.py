@@ -3,10 +3,13 @@ import tkinter as tk
 from interface.utils.toggleswitch import ToggleSwitch
 
 class MotorsCommandPannel(tk.Frame):
-    def __init__(self, parent, *args, **kwargs):
+    def __init__(self, parent, queue_send_command, key_state_handler_value, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
 
         self.config(bg="white")  # Just to differentiate visually
+
+        self.queue_send_command = queue_send_command
+        self.key_state_handler_value = key_state_handler_value
 
         # Add widgets for command panel
         command_label = tk.Label(self, text="Command Panel (Motors)")
@@ -62,7 +65,14 @@ class MotorsCommandPannel(tk.Frame):
         print(f"Speed changed to {self.slider_speed_hand_motor.get()}")
 
     def on_speed_change_arm_motor(self, event):
-        print(f"Speed changed to {self.slider_speed_arm_motor.get()}")
+        speed_base = self.slider_speed_arm_motor.get() * 1000 / 100
+        speed_middle = self.slider_speed_arm_motor.get() * 5000 / 100
+        speed_top = self.slider_speed_arm_motor.get() * 4 * 5000 / 100
+
+        self.queue_send_command.put(f"MOTOR SET SPEED BASE {speed_base}")
+        self.queue_send_command.put(f"MOTOR SET SPEED MIDDLE {speed_middle}")
+        self.queue_send_command.put(f"MOTOR SET SPEED TOP {speed_top}")
+
 
     def trigger_hand_motor(self):
         if not self.key_handler_button.get_state():
@@ -74,12 +84,24 @@ class MotorsCommandPannel(tk.Frame):
     def trigger_arm_motor(self):
         if not self.key_handler_button.get_state():
             if self.start_button_arm_motor.get_state():
-                print("Arm motor started")
+                self.queue_send_command.put(f"MOTOR START _ BASE")
+                self.queue_send_command.put(f"MOTOR START _ MIDDLE")
+                self.queue_send_command.put(f"MOTOR START _ TOP")
             else:
-                print("Arm motor stopped")
+                self.queue_send_command.put(f"MOTOR STOP _ BASE")
+                self.queue_send_command.put(f"MOTOR STOP _ MIDDLE")
+                self.queue_send_command.put(f"MOTOR STOP _ TOP")
     
     def shutdown(self, event):
-        print("Shutdown button clicked")
+        self.queue_send_command.put(f"MOTOR SHUTDOWN _ BASE")
+        self.queue_send_command.put(f"MOTOR SHUTDOWN _ MIDDLE")
+        self.queue_send_command.put(f"MOTOR SHUTDOWN _ TOP")
+
+        if self.start_button_arm_motor.get_state():
+            self.start_button_arm_motor.set_state(False)
+        if self.start_button_hand_motor.get_state():
+            self.start_button_hand_motor.set_state(False)
+
 
 
     def key_handler(self):
@@ -87,6 +109,8 @@ class MotorsCommandPannel(tk.Frame):
             print("Key handler activated")
             self.start_button_arm_motor.set_state(False)
             self.start_button_hand_motor.set_state(False)
+            self.key_state_handler_value.value = True
         else:
             print("Key handler deactivated")
+            self.key_state_handler_value.value = False
     

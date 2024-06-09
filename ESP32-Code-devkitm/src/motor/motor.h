@@ -14,7 +14,7 @@ class Motor {
         Motor(FastAccelStepperEngine engine_, int step_pin, int dir_pin, int steps_per_revolution_) {
             steps_per_revolution = steps_per_revolution_;            
             engine = engine_;
-            engine.init();
+
             stepper = engine.stepperConnectToPin(step_pin);
             stepper->setDirectionPin(dir_pin);
             stepper->setSpeedInHz(1000);
@@ -52,5 +52,9 @@ class Motor {
 
         void runBackward() {
             stepper->runBackward();
+        }
+
+        void stopMove() {
+            stepper->stopMove();
         }
 };

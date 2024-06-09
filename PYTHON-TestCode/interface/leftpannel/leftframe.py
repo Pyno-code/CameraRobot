@@ -8,7 +8,7 @@ from interface.leftpannel.motorspannels.statuspannel import MotorsStatusPannel
 from interface.leftpannel.wifipannels.commandpannel import WifiCommandPannel
 from interface.leftpannel.wifipannels.statuspannel import WifiStatusPannel
 class LeftFrame(tk.Frame):
-    def __init__(self, parent, shared_dict_values, shared_dict_order, *args, **kwargs):
+    def __init__(self, parent, shared_dict_values, shared_dict_order, queue_send_command, key_state_handler_value, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
 
         # Create the Selector widget
@@ -38,8 +38,8 @@ class LeftFrame(tk.Frame):
         self.bluetooth_status_pannel = BluetoothStatusPannel(self)
         self.bluetooth_command_pannel = BluetoothCommandPannel(self, shared_dict_values, shared_dict_order)
         
-        self.motor_status_pannel = MotorsStatusPannel(self)
-        self.motor_command_pannel = MotorsCommandPannel(self)
+        self.motor_status_pannel = MotorsStatusPannel(self, queue_send_command)
+        self.motor_command_pannel = MotorsCommandPannel(self, queue_send_command, key_state_handler_value)
 
         self.wifi_status_pannel = WifiStatusPannel(self)
         self.wifi_command_pannel = WifiCommandPannel(self, shared_dict_values, shared_dict_order)

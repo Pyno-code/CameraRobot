@@ -27,7 +27,7 @@ bool running = false;
 int dir = 1;
 
 FastAccelStepperEngine engine = FastAccelStepperEngine();
-FastAccelStepper *stpper = NULL;
+FastAccelStepper *stepper_mid = NULL;
 
 void singleClick() {
   running = !running;
@@ -35,12 +35,13 @@ void singleClick() {
   Serial.println(running);
   if (running) {
     if (dir == 1) {
-      stpper->runForward();
+      stepper_mid->runForward();
+
     } else {
-      stpper->runBackward();
+      stepper_mid->runBackward();
     }
   } else {
-    stpper->stopMove();
+    stepper_mid->stopMove();
   }
   
   
@@ -61,11 +62,11 @@ void test2() {
 void doubleClick() {
   dir = -dir;
   if (running) {
-    stpper->stopMove();
+    stepper_mid->stopMove();
     if (dir == 1) {
-      stpper->runForward();
+      stepper_mid->runForward();
     } else {
-      stpper->runBackward();
+      stepper_mid->runBackward();
     }
   }
 }
@@ -86,10 +87,11 @@ void setup() {
   
   engine.init();
 
-  stpper = engine.stepperConnectToPin(STEP_PIN_MID); // STEP pin connected to STEP_PIN_MID
-  stpper->setDirectionPin(DIR_PIN_MID);
-  stpper->setSpeedInHz(200); // Set speed in Hz
-  stpper->setAcceleration(10000); // Set acceleration in steps/s^2
+  stepper_mid = engine.stepperConnectToPin(STEP_PIN_MID); // STEP pin connected to STEP_PIN_MID
+  stepper_mid->setDirectionPin(DIR_PIN_MID);
+  stepper_mid->setSpeedInHz(1000); // Set speed in Hz
+  stepper_mid->setAcceleration(10000); // Set acceleration in steps/s^2
+  stepper_mid->runForward();
   
 }
 
@@ -101,5 +103,3 @@ void loop() {
   if (running) {
   }
 }
-
-

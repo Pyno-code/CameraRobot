@@ -34,6 +34,7 @@ class BluetoothStatusPannel(tk.Frame):
 
 
     def loop(self, shared_dict):
-        self.label_working_value.config(text=shared_dict[WORKING_STATUS_UUID])
-        self.label_bluetooth_value.config(text=shared_dict["BLUETOOTH_CONNECTED"])
+        if WORKING_STATUS_UUID in shared_dict.keys() and "BLUETOOTH_CONNECTED" in shared_dict.keys():
+            self.label_working_value.config(text=shared_dict[WORKING_STATUS_UUID])
+            self.label_bluetooth_value.config(text=shared_dict["BLUETOOTH_CONNECTED"])
         # self.label_bluetooth_value.config(text=shared_dict[UUID])

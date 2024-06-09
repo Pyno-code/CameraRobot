@@ -57,8 +57,11 @@ class ManagerController:
 
         self.queue_send_command = self.manager.Queue()
 
+        self.key_dict_handler = self.manager.dict()
+        self.key_state_handler_value = self.manager.Value('b', False)
+
         self.bluetooth_controller = BluetoothController(self.running, self.dict_values, self.order_dict, self.queue_logger)
-        self.interface_controller = App(self.running, self.dict_values, self.order_dict, self.queue_logger, self.queue_recv_tcp_message, self.queue_send_tcp_message, self.queue_send_command)
+        self.interface_controller = App(self.running, self.dict_values, self.order_dict, self.queue_logger, self.queue_recv_tcp_message, self.queue_send_tcp_message, self.queue_send_command, self.key_dict_handler, self.key_state_handler_value)
         self.tcp_controller = TCPController(self.running, self.queue_logger, self.queue_send_tcp_message, self.queue_recv_tcp_message, self.queue_send_command, self.order_dict, self.dict_values)
 
         self.bluetooth_process = Process(target=self.bluetooth_controller.start)

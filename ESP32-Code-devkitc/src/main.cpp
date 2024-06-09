@@ -34,7 +34,7 @@ void loop() {
   controller->loop();
   unsigned long time_elasped = millis() - start_time;
   if (time_elasped > 50) {
-    logger::print(logger::DEBUG, "Loop time : ", false);
-    Serial.println(String(millis() - start_time));
+    // logger::print(logger::DEBUG, "Loop time : ", false);
+    // Serial.println(String(millis() - start_time));
   }
 }
