@@ -136,96 +136,96 @@ class MotorController {
 
             if (limitSwitchTest.isPressed() || initialization) {
                 // } else if (command[0] == INITIALIZATION) || initialization {
-                    Serial.println("INITIALIZATION Command");
-                    limitSwitchMiddle.update();
-                    limitSwitchTop.update();
-                    if (!initialization) {
-                        Serial.println("initialization false, switching");
-                        initialization = true;
-                        phase = 0;
-                        stepper_top->setSpeedInHz(200);
-                        stepper_top->stopMove();
-                        stepper_middle->setSpeedInHz(50);
-                        stepper_middle->stopMove();
-                        stepper_middle->runForward();
-                    }
-                    if (phase == 0) {
-                        Serial.println("Phase 0");
-                        stepper_middle->runForward();
-                        if (!stepper_middle->isRunning()) {
-                            stepper_middle->runForward();
-                        }
-                        if (limitSwitchMiddle.isPressed()) {
-                            stepper_middle->stopMove();
-                            phase = 1;
-                            Serial.println("passage à la phase 1");
-                        }
-                    } else if (phase == 1) {
-                        Serial.println("Phase 1");
-                        if (!stepper_middle->isRunning()) {
-                            stepper_middle->setSpeedInHz(25);
-                            stepper_middle->runBackward();
-                        }
-                        if (limitSwitchMiddle.isReleased()) {
-                            stepper_middle->stopMove();
-                            phase = 2;
-                        }
-
-                        
-                    } else if (phase == 2) {
-                        Serial.println("Phase 2");
-                        if (!stepper_middle->isRunning()) {
-                            stepper_middle->runForward();
-                        }
-                        if (limitSwitchMiddle.isPressed()) {
-                            stepper_middle->stopMove();
-                            phase = 3;
-                            stepper_middle->setCurrentPosition(850);
-                            stepper_middle->setSpeedInHz(400);
-                            stepper_middle->moveTo(0, true);
-                            stepper_middle->setSpeedInHz(0);
-                        }
-                    } else if (phase == 3) {
-                        Serial.println("Phase 3");
-                        stepper_top->runForward();
-                        if (!stepper_top->isRunning()) {
-                            stepper_top->runForward();
-                        }
-                        if (limitSwitchTop.isPressed()) {
-                            stepper_top->stopMove();
-                            phase = 4;
-                            Serial.println("passage à la phase 4");
-                        }
-                    } else if (phase == 4) {
-                        Serial.println("Phase 4");
-                        if (!stepper_top->isRunning()) {
-                            stepper_top->setSpeedInHz(100);
-                            stepper_top->runBackward();
-                        }
-                        if (limitSwitchTop.isReleased()) {
-                            stepper_top->stopMove();
-                            
-                            phase = 5;
-                        }
-
-                        
-                    } else if (phase == 5) {
-                        Serial.println("Phase 5");
-                        if (!stepper_top->isRunning()) {
-                            stepper_top->runForward();
-                        }
-                        if (limitSwitchTop.isPressed()) {
-                            stepper_top->stopMove();
-                            stepper_top->setCurrentPosition(20400);
-                            stepper_top->setSpeedInHz(1600);
-                            stepper_top->moveTo(0, true);
-                            initialization = false;
-                            stepper_top->setSpeedInHz(0);
-                            phase = 0;
-                        }
-                    }
-                    
+                Serial.println("INITIALIZATION Command");
+                limitSwitchMiddle.update();
+                limitSwitchTop.update();
+                if (!initialization) {
+                    Serial.println("initialization false, switching");
+                    initialization = true;
+                    phase = 0;
+                    stepper_top->setSpeedInHz(200);
+                    stepper_top->stopMove();
+                    stepper_middle->setSpeedInHz(50);
+                    stepper_middle->stopMove();
+                    stepper_middle->runForward();
                 }
+                if (phase == 0) {
+                    Serial.println("Phase 0");
+                    stepper_middle->runForward();
+                    if (!stepper_middle->isRunning()) {
+                        stepper_middle->runForward();
+                    }
+                    if (limitSwitchMiddle.isPressed()) {
+                        stepper_middle->stopMove();
+                        phase = 1;
+                        Serial.println("passage à la phase 1");
+                    }
+                } else if (phase == 1) {
+                    Serial.println("Phase 1");
+                    if (!stepper_middle->isRunning()) {
+                        stepper_middle->setSpeedInHz(25);
+                        stepper_middle->runBackward();
+                    }
+                    if (limitSwitchMiddle.isReleased()) {
+                        stepper_middle->stopMove();
+                        phase = 2;
+                    }
+
+                    
+                } else if (phase == 2) {
+                    Serial.println("Phase 2");
+                    if (!stepper_middle->isRunning()) {
+                        stepper_middle->runForward();
+                    }
+                    if (limitSwitchMiddle.isPressed()) {
+                        stepper_middle->stopMove();
+                        phase = 3;
+                        stepper_middle->setCurrentPosition(850);
+                        stepper_middle->setSpeedInHz(400);
+                        stepper_middle->moveTo(0, true);
+                        stepper_middle->setSpeedInHz(0);
+                    }
+                } else if (phase == 3) {
+                    Serial.println("Phase 3");
+                    stepper_top->runForward();
+                    if (!stepper_top->isRunning()) {
+                        stepper_top->runForward();
+                    }
+                    if (limitSwitchTop.isPressed()) {
+                        stepper_top->stopMove();
+                        phase = 4;
+                        Serial.println("passage à la phase 4");
+                    }
+                } else if (phase == 4) {
+                    Serial.println("Phase 4");
+                    if (!stepper_top->isRunning()) {
+                        stepper_top->setSpeedInHz(100);
+                        stepper_top->runBackward();
+                    }
+                    if (limitSwitchTop.isReleased()) {
+                        stepper_top->stopMove();
+                        
+                        phase = 5;
+                    }
+
+                    
+                } else if (phase == 5) {
+                    Serial.println("Phase 5");
+                    if (!stepper_top->isRunning()) {
+                        stepper_top->runForward();
+                    }
+                    if (limitSwitchTop.isPressed()) {
+                        stepper_top->stopMove();
+                        stepper_top->setCurrentPosition(20400);
+                        stepper_top->setSpeedInHz(1600);
+                        stepper_top->moveTo(0, true);
+                        initialization = false;
+                        stepper_top->setSpeedInHz(0);
+                        phase = 0;
+                    }
+                }
+                    
+            }
 
 
             if (commandQueue->size() > 0) {
@@ -368,6 +368,12 @@ class MotorController {
                 }
                 Serial.println("");
             }
+        }
+
+        void stopMotor() {
+            stepper_base->stopMove();
+            stepper_middle->stopMove();
+            stepper_top->stopMove();
         }
 
                 

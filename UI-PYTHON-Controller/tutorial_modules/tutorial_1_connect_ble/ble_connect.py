@@ -81,6 +81,7 @@ async def connect_ble(notification_handler: noti_handler_T, identifier: Optional
 
             logger.info(f"Establishing BLE connection to {device}...")
             client = BleakClient(device)
+            logger.info("Client Initialized!")
             await client.connect(timeout=15)
             logger.info("BLE Connected!")
 

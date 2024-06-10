@@ -52,11 +52,22 @@ LimitSwitch limitSwitchBottom(36, 10);
 void setup() {
   Serial.begin(115200);
 
-  // Exemple d'utilisation avec la broche 13 et un intervalle de debounce de 10 ms
+  limitSwitchTop.begin();
+  limitSwitchBottom.begin();
 }
 
 void loop() {
   // Mettez à jour l'état du limit switch
+
+  static unsigned long previousMillis = 0;
+  const unsigned long interval = 3000;
+
+  unsigned long currentMillis = millis();
+  if (currentMillis - previousMillis >= interval) {
+    previousMillis = currentMillis;
+    Serial.println("looping each 3 sec");
+  }
+
   limitSwitchTop.update();
   limitSwitchBottom.update();
 

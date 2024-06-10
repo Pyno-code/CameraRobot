@@ -39,13 +39,12 @@ class Controller {
         void loop() {
             
             bleController->loop();
-            // motorController->loop(commandQueue);
-            motorController->loop();
 
             
 
             if (variable::bluetoothConnectedStatus && variable::orderWorking) {
-
+                motorController->loop();
+                
                 // ordre de marcher
                 variable::workingStatus = true;
 
@@ -87,6 +86,7 @@ class Controller {
                 stopTCPConnection();
                 stopWifiConnection();
                 stopWorking();
+                stopMortor();
             }
 
         }
@@ -156,5 +156,9 @@ class Controller {
                     logger::print(logger::INFO, "Server tcp disconnected");
                 }
             }
+        }
+
+        void stopMortor() {
+            motorController->stopMotor();
         }
 };
