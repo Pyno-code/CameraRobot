@@ -32,6 +32,7 @@ class Gamepad:
             dict_temp = self.trigger_dict.copy()
 
             for event in events:
+                print(event.ev_type, event.code, event.state)
                 if event.ev_type == 'Key':
                     pass
                     # print(f'Bouton {event.code} {"pressé" if event.state else "relâché"}')
@@ -67,12 +68,12 @@ class Gamepad:
                 
             self.updated =  dict_temp != self.trigger_dict
         except inputs.UnpluggedError:
-            # print("Manette débranchée")
+            print("Manette débranchée")
             pass
 
 
 
-# if __name__ == '__main__':
-#     gamepad = Gamepad()
-#     while True:
-#         gamepad.loop()
+if __name__ == '__main__':
+    gamepad = Gamepad()
+    while True:
+        gamepad.loop()

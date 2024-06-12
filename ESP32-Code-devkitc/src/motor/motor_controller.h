@@ -109,21 +109,23 @@ class MotorController {
             stepper_base = engine.stepperConnectToPin(STEP_PIN_BASE);
             stepper_base->setDirectionPin(DIR_PIN_BASE);
             stepper_base->setSpeedInHz(50); // Set speed in Hz
-            stepper_base->setAcceleration(10000); // Set acceleration in steps/s^2
+            stepper_base->setAcceleration(5000); // Set acceleration in steps/s^2
 
             stepper_middle = engine.stepperConnectToPin(STEP_PIN_MID); // STEP pin connected to STEP_PIN_MID
             stepper_middle->setDirectionPin(DIR_PIN_MID);
             stepper_middle->setSpeedInHz(50); // Set speed in Hz
-            stepper_middle->setAcceleration(10000); // Set acceleration in steps/s^2
+            stepper_middle->setAcceleration(5000); // Set acceleration in steps/s^2
 
             stepper_top = engine.stepperConnectToPin(STEP_PIN_TOP); // STEP pin connected to STEP_PIN_TOP
             stepper_top->setDirectionPin(DIR_PIN_TOP);
             stepper_top->setSpeedInHz(50); // Set speed in Hz
-            stepper_top->setAcceleration(10000); // Set acceleration in steps/s^2
+            stepper_top->setAcceleration(80000); // Set acceleration in steps/s^2
 
         }
 
         void loop() {
+
+
             limitSwitchTest.update();
 
             // Serial.println("Looping");
@@ -180,8 +182,8 @@ class MotorController {
                     if (limitSwitchMiddle.isPressed()) {
                         stepper_middle->stopMove();
                         phase = 3;
-                        stepper_middle->setCurrentPosition(850);
-                        stepper_middle->setSpeedInHz(400);
+                        stepper_middle->setCurrentPosition(590);
+                        stepper_middle->setSpeedInHz(160);
                         stepper_middle->moveTo(0, true);
                         stepper_middle->setSpeedInHz(0);
                     }
@@ -310,6 +312,7 @@ class MotorController {
                             if (*dir == 1) {
                                 Serial.print("      ");
                                 Serial.println("Forward");
+                                
                                 stepper->runForward();
                             } else {
                                 Serial.print("      ");

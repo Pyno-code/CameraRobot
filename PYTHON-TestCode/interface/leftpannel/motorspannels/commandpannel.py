@@ -65,9 +65,9 @@ class MotorsCommandPannel(tk.Frame):
         print(f"Speed changed to {self.slider_speed_hand_motor.get()}")
 
     def on_speed_change_arm_motor(self, event):
-        speed_base = self.slider_speed_arm_motor.get() * 1000 / 100
-        speed_middle = self.slider_speed_arm_motor.get() * 5000 / 100
-        speed_top = self.slider_speed_arm_motor.get() * 4 * 5000 / 100
+        speed_base = self.slider_speed_arm_motor.get() * 1000 / 200
+        speed_middle = self.slider_speed_arm_motor.get() * (5000 / 667) * 0.6
+        speed_top = self.slider_speed_arm_motor.get() * 4 * 5000 / 150
 
         self.queue_send_command.put(f"MOTOR SET SPEED BASE {speed_base}")
         self.queue_send_command.put(f"MOTOR SET SPEED MIDDLE {speed_middle}")

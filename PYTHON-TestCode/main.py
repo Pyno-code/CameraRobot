@@ -8,3 +8,4 @@ if __name__ == "__main__":
 
     manager.launch()
     manager.join()
+    print('End of the program')
