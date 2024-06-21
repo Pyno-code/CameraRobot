@@ -313,8 +313,56 @@ class MotorController {
                                 Serial.print("      ");
                                 Serial.println("Forward");
                                 
-                                stepper->runForward();
+                                if (motor_id == MOTOR_TOP) {
+                                    if (!(stepper_top->getCurrentPosition() > 20005)) {
+                                        stepper->runForward();
+                                    } else {
+                                        stepper->stopMove();
+                                        stepper->moveTo(20005);
+                                    }
+                                } else if (motor_id == MOTOR_MIDDLE){
+                                    if (!(stepper_middle->getCurrentPosition() > 500)) {
+                                        stepper->runForward();
+                                    } else {
+                                        stepper->stopMove();
+                                        stepper->moveTo(500);
+                                    }
+                                } else if (motor_id == MOTOR_BASE){
+                                    if (!(stepper_base->getCurrentPosition() > 1995)) {
+                                        stepper->runForward();
+                                    } else {
+                                        stepper->stopMove();
+                                        stepper->moveTo(1995);
+                                    }
+                                }
+                                
+
                             } else {
+
+                                if (motor_id == MOTOR_TOP) {
+                                    if (!(stepper_top->getCurrentPosition() < -20005)) {
+                                        stepper->runBackward();
+                                    } else {
+                                        stepper->stopMove();
+                                        stepper->moveTo(-20005);
+                                    }
+                                } else if (motor_id == MOTOR_MIDDLE){
+                                    if (!(stepper_middle->getCurrentPosition() < -1939)) {
+                                        stepper->runBackward();
+                                    } else {
+                                        stepper->stopMove();
+                                        stepper->moveTo(-1939);
+                                    }
+
+                                } else if (motor_id == MOTOR_BASE){
+                                    if (!(stepper_base->getCurrentPosition() < -1995)) {
+                                        stepper->runBackward();
+                                    } else {
+                                        stepper->stopMove();
+                                        stepper->moveTo(-1995);
+                                    }
+                                }
+
                                 Serial.print("      ");
                                 Serial.println("Backward");
                                 stepper->runBackward();
